@@ -12,7 +12,7 @@ router.route('/').get((req, res) => {
 
 router.route('/get').get((req, res) => {
     const postID = req.body.postID;
-
+    //Get singular post by id
     Post.findById(postID)
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -43,7 +43,7 @@ router.route('/add').post((req, res) => {
 
 router.route('/delete').delete((req, res) => {
     const postID = req.body.id;
-
+    //Gets the postId from whatever post has been selected
     Post.deleteOne(postID)
         .then(() => res.json('Post deleted!'))
         .catch(err => res.status(400).json('Error: ' + err));
@@ -67,6 +67,9 @@ router.route('/report').post((req, res) => {
     newReport.save()
         .then(() => res.json('Report added!'))
         .catch(err => res.status(400).json('Error: ' + err));
+
+        //Post.findById(postID).
+        //Still need to add the report object to an array in the post object
 });
 
 module.exports = router;
