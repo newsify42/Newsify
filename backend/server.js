@@ -7,7 +7,6 @@ const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 // Middleware stack
 app.use(cors());
@@ -15,18 +14,18 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 
-// Establish a connection to the MongoDB
+// Establish a connection to the MongoDB database
 mongoose.connect(process.env.ATLAS_URI, {
-    // These options remove deprecation warnings in the MongoDB Node.js driver
-    useNewUrlParser: true, 
-    useUnifiedTopology: true, 
-    useCreateIndex: true
-});
+        // These options remove deprecation warnings in the MongoDB Node.js driver
+        useNewUrlParser: true, 
+        useUnifiedTopology: true, 
+        useCreateIndex: true
+    })
+    .then(() => console.log("MongoDB connection successfully established"))
+    .catch(err => console.log(err));
 
-mongoose.connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-});
+const port = process.env.PORT || 5000;
 
-app.listen(port, ()=> {
-    console.log(`Server is running on port: ${port}`);
+app.listen(port, () => {
+    console.log(`Server is up and running on port: ${port}`);
 });
