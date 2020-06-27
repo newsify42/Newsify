@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let Post = require('../models/post.model');
 let Report = require('../models/report.model');
+const { db, insertMany } = require('../models/post.model');
 //let Comment = require('../models/comment.model');
 
 router.route('/').get((req, res) => {
@@ -14,8 +15,8 @@ router.route('/get').get((req, res) => {
     const postID = req.body.postID;
     //Get singular post by id
     Post.findById(postID)
-    .then(users => res.json(users))
-    .catch(err => res.status(400).json('Error: ' + err));
+        .then(posts => res.json(posts))
+        .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
@@ -56,20 +57,21 @@ router.route('/report').post((req, res) => {
     const offense = req.body.offense;
     const content = req.body.content;
 
+
     const newReport = new Report
         ({
             username: username,
             reortedID: postID,
             offense: offense,
-            content: content,
+            content: content
         });
-
+    Post.findById(postID).update({ $push: { "Report": newReport } }).save();
     newReport.save()
         .then(() => res.json('Report added!'))
         .catch(err => res.status(400).json('Error: ' + err));
-
-        //Post.findById(postID).
-        //Still need to add the report object to an array in the post object
+    //Post.findById(postID).Report
+    //Post.findById(postID).
+    //Still need to add the report object to an array in the post object
 });
 
 module.exports = router;
