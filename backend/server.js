@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -10,6 +11,7 @@ const app = express();
 
 // Middleware stack
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
