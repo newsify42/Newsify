@@ -1,0 +1,9 @@
+.form_container {
+  /* width: 80%;
+  margin: 50px auto; */
+  height: 100%;
+}
+
+.form_container button {
+  width: 100%;
+}
