@@ -6,8 +6,11 @@ import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 
 function createPrivateRoute(Component) {
-  //logic for creating a private route goes here
-  return;
+  return localStorage.getItem("token") ? (
+    <Component />
+  ) : (
+    <Redirect to="/login" />
+  );
 }
 
 const RoutesConfig = [
