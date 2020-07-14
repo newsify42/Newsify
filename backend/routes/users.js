@@ -44,25 +44,30 @@ router.route('/login').post((req, res) => {
                 // Checks if the hashes of the passwords match
                 // Generates and sends a JWT if they match
                 bcrypt.compare(req.body.password, user.password)
-                    .then(isMatch => {
-                        if(isMatch) {
-                            // Token currently expires after 3 hours
-                            const token = jwt.sign({email: req.body.email},
-                                process.env.TOKEN_SECRET, {expiresIn: '120'});
+                .then(isMatch => {
+                    if(isMatch) {
+                        // Token currently expires after 3 hours
+                        const token = jwt.sign(
+                            {id: user._id, email: req.body.email},
+                            process.env.TOKEN_SECRET, {expiresIn: '3h'});
 
-                            // Store the JWT in a cookie
-                            res.cookie('Authorization', 'Bearer ' + token);
-                            res.status(200).json({
-                                status: "success",
-                                body: "User logged in",
-                            });
-                        } else {
-                            return res.status(401).json({
-                                status: "error",
-                                body: "Password is incorrect"
-                            });
-                        }
-                    })
+                        // Store the JWT in a cookie
+                        res.cookie('Authorization', 'Bearer ' + token);
+                        // res.status(200).json({
+                        //     status: "success",
+                        //     body: "User logged in",
+                        // });
+                        res.status(200).json({
+                            id: user._id,
+                            token: token
+                        });
+                    } else {
+                        return res.status(401).json({
+                            status: "error",
+                            body: "Password is incorrect"
+                        });
+                    }
+                })
             } else {
                 return res.status(404).json({
                     status: "error",
