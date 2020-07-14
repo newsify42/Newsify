@@ -16,7 +16,7 @@ function createPrivateRoute(Component) {
 const RoutesConfig = [
   {
     path: "/",
-    component: Home
+    render: () => createPrivateRoute(Home)
   },
   {
     path: "/login",
