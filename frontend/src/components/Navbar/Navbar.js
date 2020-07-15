@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./Navbar.module.css";
+import SubNav from "./SubNavbar";
 
 import { Layout, Menu, Icon, Button } from "antd";
 
 const { Header, Content, Footer } = Layout;
 
 const Navbar = props => {
+  const logout = () => {
+    localStorage.clear();
+  };
   return (
     <Layout>
       <Header className={styles.container}>
@@ -71,12 +75,17 @@ const Navbar = props => {
               Video Games
             </NavLink>
           </Menu.Item>
-          <Button key="7" type="primary">
-            Log out
-          </Button>
+          <Link to="/login">
+            <Button key="7" type="primary" onClick={logout}>
+              Log out
+            </Button>
+          </Link>
         </Menu>
       </Header>
-      <Content>{props.children}</Content>
+      <Content>
+        <SubNav />
+        {props.children}
+      </Content>
     </Layout>
   );
 };
