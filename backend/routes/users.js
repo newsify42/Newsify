@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const ObjectId = require("mongoose").Types.ObjectId;
 require("dotenv").config();
 
 const User = require("../models/user.model");
@@ -73,7 +74,7 @@ router.route("/login").post((req, res) => {
             token: token,
           });
         } else {
-          return res.status(401).json({
+          res.status(401).json({
             message: "Password is incorrect",
           });
         }
@@ -86,22 +87,91 @@ router.route("/logout").post((req, res) => {
   res.clearCookie("Authorization");
 });
 
-router.route("/updateEmail").put((req, res) => {});
+router.route("/:userId").patch(checkAuth, (req, res) => {
+  const userId = req.params.userId;
 
-router.route("/updatePassword").put((req, res) => {});
+  if (!ObjectId.isValid(userId)) {
+    return res.status(400).json({
+      message: "ObjectID is not valid",
+    });
+  }
 
-router.route("/:userId").delete(checkAuth, (req, res) => {
-  User.deleteOne({ _id: req.params.userId })
-    .then((result) => {
-      // n is the number of documents deleted
-      if (!result.n) {
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
         return res.status(404).json({
           message: "User not found",
         });
       }
 
-      res.status(200).json({
-        message: "User is deleted",
+      bcrypt.compare(req.body.oldPassword, user.password, (err, isMatch) => {
+        if (err) return res.status(500).json(err);
+
+        if (isMatch) {
+          if (req.body.email) {
+            User.updateOne({ _id: userId }, { email: req.body.email })
+              .then(() => {
+                res.status(200).json({
+                  message: "Email updated",
+                });
+              })
+              .catch((err) => res.status(500).json(err));
+          } else if (req.body.newPassword) {
+            User.updateOne({ _id: userId }, { email: req.body.password })
+              .then(() => {
+                res.status(200).json({
+                  message: "Password updated",
+                });
+              })
+              .catch((err) => res.status(500).json(err));
+          } else {
+            res.status(400).json({
+              message: "Parameters not provided",
+            });
+          }
+        } else {
+          res.status(401).json({
+            message: "Password is incorrect",
+          });
+        }
+      });
+    })
+    .catch((err) => res.status(500).json(err));
+});
+
+router.route("/:userId").delete(checkAuth, (req, res) => {
+  const userId = req.params.userId;
+
+  if (!ObjectId.isValid(userId)) {
+    return res.status(400).json({
+      message: "ObjectID is not valid",
+    });
+  }
+
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+        if (err) return res.status(500).json(err);
+
+        if (isMatch) {
+          User.deleteOne({ _id: userId })
+            .then(() => {
+              res.status(200).json({
+                message: "User is deleted",
+              });
+            })
+            .catch((err) => res.status(500).json(err));
+        } else {
+          res.status(401).json({
+            message: "Password is incorrect",
+          });
+        }
       });
     })
     .catch((err) => res.status(500).json(err));
