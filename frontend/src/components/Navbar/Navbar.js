@@ -8,6 +8,9 @@ import { Layout, Menu, Icon, Button } from "antd";
 const { Header, Content, Footer } = Layout;
 
 const Navbar = props => {
+  const logout = () => {
+    localStorage.clear();
+  };
   return (
     <Layout>
       <Header className={styles.container}>
@@ -72,7 +75,7 @@ const Navbar = props => {
               Video Games
             </NavLink>
           </Menu.Item>
-          <Button key="7" type="primary">
+          <Button key="7" type="primary" onClick={logout}>
             Log out
           </Button>
         </Menu>
