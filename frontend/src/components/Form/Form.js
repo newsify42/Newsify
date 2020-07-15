@@ -92,7 +92,10 @@ export default function FormBox({ register }) {
     try {
       setIsLoading(true);
       delete user.confirmPassword;
-      await justAxios().post(target, user);
+      const res = await justAxios().post(target, user);
+      if (res.data.hasOwnProperty("token")) {
+        localStorage.setItem("token", res.data.token);
+      }
       let message = register
         ? "Account successfully created."
         : "Successful login.";
