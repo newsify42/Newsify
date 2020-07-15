@@ -8,6 +8,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       trim: true, // removes whitespace
+      match: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, // validates the email is in the correct format
     },
     password: {
       type: String,
