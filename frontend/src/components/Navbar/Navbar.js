@@ -82,7 +82,7 @@ const Navbar = props => {
           theme="light"
           mode="horizontal"
           className={styles.subNav}
-          // defaultSelectedKeys="1"
+          defaultSelectedKeys="1"
         >
           <Menu.Item key="1" className={styles.menuItem}>
             Global
