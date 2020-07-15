@@ -75,9 +75,11 @@ const Navbar = props => {
               Video Games
             </NavLink>
           </Menu.Item>
-          <Button key="7" type="primary" onClick={logout}>
-            Log out
-          </Button>
+          <Link to="/login">
+            <Button key="7" type="primary" onClick={logout}>
+              Log out
+            </Button>
+          </Link>
         </Menu>
       </Header>
       <Content>
