@@ -4,122 +4,107 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("../models/user.model");
-
-const validate = require("../utils/validate");
+const checkAuth = require("../middleware/check-auth");
 
 router.route("/register").post((req, res) => {
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (!user) {
-      // Generates the salt and hash for the password
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
-          const newUser = new User({
-            email: req.body.email,
-            password: hash,
-          });
-
-          // Creates the new user
-          newUser
-            .save()
-            .then((user) =>
-              res.status(201).json({
-                status: "success",
-                body: "New account created",
-              })
-            )
-            .catch((err) => res.status(500).json(err));
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (user) {
+        return res.status(409).json({
+          message: "Email already exists",
         });
+      }
+
+      // Generates the salt and hash for the password
+      bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) return res.status(500).json(err);
+
+        const newUser = new User({
+          email: req.body.email,
+          password: hash,
+        });
+
+        // Creates the new user
+        newUser
+          .save()
+          .then((user) =>
+            res.status(201).json({
+              message: "New user created",
+              id: user._id,
+            })
+          )
+          .catch((err) => res.status(500).json(err));
       });
-    } else {
-      return res.status(409).json({
-        status: "info",
-        body: "Email already taken",
-      });
-    }
-  });
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
 router.route("/login").post((req, res) => {
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (user) {
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          message: "Email not found",
+        });
+      }
+
       // Checks if the hashes of the passwords match
       // Generates and sends a JWT if they match
-      bcrypt.compare(req.body.password, user.password).then((isMatch) => {
+      bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+        if (err) return res.status(500).json(err);
+
         if (isMatch) {
-          // Token currently expires after 3 hours
           const token = jwt.sign(
-            { id: user._id, email: req.body.email },
+            {
+              id: user._id,
+              email: req.body.email,
+            },
             process.env.TOKEN_SECRET,
+            // Token currently expires after 3 hours
             { expiresIn: "3h" }
           );
 
           // Store the JWT in a cookie
           res.cookie("Authorization", "Bearer " + token);
-          // res.status(200).json({
-          //     status: "success",
-          //     body: "User logged in",
-          // });
+          // Also return it with the message (for now)
           res.status(200).json({
+            message: "User logged in",
             id: user._id,
             token: token,
           });
         } else {
           return res.status(401).json({
-            status: "error",
-            body: "Password is incorrect",
+            message: "Password is incorrect",
           });
         }
       });
-    } else {
-      return res.status(404).json({
-        status: "error",
-        body: "Email not found",
-      });
-    }
-  });
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
 router.route("/logout").post((req, res) => {
-  User.findByIdAndUpdate({});
+  res.clearCookie("Authorization");
 });
 
 router.route("/updateEmail").put((req, res) => {});
 
 router.route("/updatePassword").put((req, res) => {});
 
-router.route("/deleteUser").delete((req, res) => {
-  let token = undefined;
+router.route("/:userId").delete(checkAuth, (req, res) => {
+  User.deleteOne({ _id: req.params.userId })
+    .then((result) => {
+      // n is the number of documents deleted
+      if (!result.n) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
 
-  if (!req.cookies.Authorization) {
-    return res.status(401).json({
-      status: "error",
-      body: "Token not found",
-    });
-  } else {
-    token = req.cookies.Authorization.split(" ")[1];
-  }
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-    console.log(decoded);
-    if (decoded) {
-      bcrypt.compare(req.body.password, user.password).then((isMatch) => {
-        console.log(isMatch);
-        if (isMatch) {
-          return;
-        } else {
-          return res.status(401).json({
-            status: "error",
-            body: "Password is incorrect",
-          });
-        }
+      res.status(200).json({
+        message: "User is deleted",
       });
-    } else {
-      return res.status(401).json({
-        status: "error",
-        body: "Token is invalid or has expired",
-      });
-    }
-  });
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
 module.exports = router;
