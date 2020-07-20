@@ -1,30 +1,37 @@
 const router = require("express").Router();
 
 const {
-  checkUserExists,
-  checkEmailExists,
-  createUser,
+  verifyEmailDoesNotExist,
+  verifyUserExistsByEmail,
+  verifyUserExistsById,
+} = require("../middleware/users");
+
+const { validateToken } = require("../middleware/tokens");
+
+const {
   login,
-  verifyToken,
+  register,
   updateEmail,
   updatePassword,
-} = require("../middleware/middleware");
+} = require("../controllers/users");
 
-router.route("/register").post(checkEmailExists, createUser);
+router.route("/register").post(verifyEmailDoesNotExist, register);
 
-router.route("/login").post(checkEmailExists, login);
+router.route("/login").post(verifyUserExistsByEmail, login);
 
-router.route("/logout").post((req, res) => {
+router.route("/logout").post((res) => {
   res.clearCookie("Authorization");
 });
 
-router.route("/update_email").patch(verifyToken, checkUserExists, updateEmail);
+router
+  .route("/update_email")
+  .patch(validateToken, verifyUserExistsById, updateEmail);
 
 router
   .route("/update_password")
-  .patch(verifyToken, checkUserExists, updatePassword);
+  .patch(validateToken, verifyUserExistsById, updatePassword);
 
-router.route("/:userId").delete(verifyToken, (req, res) => {
+router.route("/:userId").delete(validateToken, (req, res) => {
   const userId = req.params.userId;
 
   if (!ObjectId.isValid(userId)) {
