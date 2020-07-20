@@ -1,6 +1,4 @@
-const asyncHandler = require("express-async-handler");
 const httpError = require("http-errors");
-const bcrypt = require("bcrypt");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.validateObjectId = (id) => {
@@ -14,11 +12,3 @@ exports.checkCookieExists = (cookieName, req) => {
     throw httpError(400, "Cookie Not Found");
   }
 };
-
-exports.checkPasswordsMatch = asyncHandler(async (pass1, pass2) => {
-  const isMatch = await bcrypt.compare(pass1, pass2);
-
-  if (!isMatch) {
-    throw httpError(401, "Password Incorrect");
-  }
-});

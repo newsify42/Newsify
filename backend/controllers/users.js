@@ -25,8 +25,6 @@ exports.register = asyncHandler(async (req, res) => {
 });
 
 exports.login = asyncHandler(async (req, res) => {
-  await checkPasswordsMatch(req.body.password, req.user.password);
-
   // Creates the JWT
   const token = await jwt.sign(
     {
@@ -48,9 +46,7 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 exports.updateEmail = asyncHandler(async (req, res) => {
-  await checkPasswordsMatch(req.body.oldPassword, req.user.password);
-
-  await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.email });
+  await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.newEmail });
 
   res.status(200).json({
     message: "Email Updated",
@@ -58,12 +54,18 @@ exports.updateEmail = asyncHandler(async (req, res) => {
 });
 
 exports.updatePassword = asyncHandler(async (req, res) => {
-  await checkPasswordsMatch(req.body.oldPassword, req.user.password);
-
   const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
   await User.findByIdAndUpdate({ _id: req.id }, { password: hash });
 
   res.status(200).json({
     message: "Password Updated",
+  });
+});
+
+exports.deleteUser = asyncHandler(async (req, res) => {
+  await User.deleteOne({ _id: userId });
+
+  res.status(200).json({
+    message: "User Deleted",
   });
 });
