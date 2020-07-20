@@ -1,9 +1,9 @@
 const router = require("express").Router();
 
 const {
-  verifyEmailDoesNotExist,
-  verifyUserExistsByEmail,
-  verifyUserExistsById,
+  checkEmailDoesNotExist,
+  findUserByEmail,
+  findUserById,
 } = require("../middleware/users");
 
 const { validateToken } = require("../middleware/tokens");
@@ -15,21 +15,19 @@ const {
   updatePassword,
 } = require("../controllers/users");
 
-router.route("/register").post(verifyEmailDoesNotExist, register);
+router.route("/register").post(checkEmailDoesNotExist, register);
 
-router.route("/login").post(verifyUserExistsByEmail, login);
+router.route("/login").post(findUserByEmail, login);
 
 router.route("/logout").post((res) => {
   res.clearCookie("Authorization");
 });
 
-router
-  .route("/update_email")
-  .patch(validateToken, verifyUserExistsById, updateEmail);
+router.route("/update_email").patch(validateToken, findUserById, updateEmail);
 
 router
   .route("/update_password")
-  .patch(validateToken, verifyUserExistsById, updatePassword);
+  .patch(validateToken, findUserById, updatePassword);
 
 router.route("/:userId").delete(validateToken, (req, res) => {
   const userId = req.params.userId;

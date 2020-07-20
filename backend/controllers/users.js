@@ -1,82 +1,69 @@
+const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("../models/user.model");
+const { checkPasswordsMatch } = require("../utils/users");
 
-saltRounds = "10";
+saltRounds = 10;
 
-exports.register = async (req, res, next) => {
-  try {
-    const hash = await bcrypt.hash(req.body.password, saltRounds);
+exports.register = asyncHandler(async (req, res) => {
+  const hash = await bcrypt.hash(req.body.password, saltRounds);
 
-    const newUser = new User({
-      email: req.body.email,
-      password: hash,
-    });
+  const newUser = new User({
+    email: req.body.email,
+    password: hash,
+  });
 
-    const user = await newUser.save();
+  const user = await newUser.save();
 
-    res.status(201).json({
-      message: "New user created",
-      id: user._id,
-    });
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
+  res.status(201).json({
+    message: "New user created",
+    id: user._id,
+  });
+});
 
-exports.login = async (req, res) => {
-  try {
-    await verifyPasswordsMatch(req.body.password, req.user.password, res);
+exports.login = asyncHandler(async (req, res) => {
+  await checkPasswordsMatch(req.body.password, req.user.password);
 
-    const token = await jwt.sign(
-      {
-        id: req.user._id,
-      },
-      process.env.TOKEN_SECRET,
-      // Token currently expires after 3 hours
-      { expiresIn: "3h" }
-    );
-
-    // Store the JWT in a cookie
-    res.cookie("Authorization", "Bearer " + token);
-    // Also return it with the message (for now)
-    res.status(200).json({
-      message: "User logged in",
+  // Creates the JWT
+  const token = await jwt.sign(
+    {
       id: req.user._id,
-      token: token,
-    });
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
+    },
+    process.env.TOKEN_SECRET,
+    // Token currently expires after 3 hours
+    { expiresIn: "3h" }
+  );
 
-exports.updateEmail = async (req, res) => {
-  try {
-    await verifyPasswordsMatch(req.body.oldPassword, req.user.password, res);
+  // Store the JWT in a cookie
+  res.cookie("Authorization", "Bearer " + token);
+  // Also return it with the message (for now)
+  res.status(200).json({
+    message: "User logged in",
+    id: req.user._id,
+    token: token,
+  });
+});
 
-    await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.email });
+exports.updateEmail = asyncHandler(async (req, res) => {
+  await checkPasswordsMatch(req.body.oldPassword, req.user.password);
 
-    res.status(200).json({
-      message: "Email updated",
-    });
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
+  await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.email });
 
-exports.updatePassword = async (req, res) => {
-  try {
-    await verifyPasswordsMatch(req.body.oldPassword, req.user.password, res);
+  res.status(200).json({
+    message: "Email updated",
+  });
+});
 
-    const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
-    await User.findByIdAndUpdate({ _id: req.id }, { password: hash });
+exports.updatePassword = asyncHandler(async (req, res) => {
+  await checkPasswordsMatch(req.body.oldPassword, req.user.password);
 
-    res.status(200).json({
-      message: "Password updated",
-    });
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-};
+  const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
+  await User.findByIdAndUpdate({ _id: req.id }, { password: hash });
+
+  res.status(200).json({
+    message: "Password updated",
+  });
+});

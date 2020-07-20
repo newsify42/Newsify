@@ -19,11 +19,23 @@ app.use(morgan("dev"));
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 
+// Custom error handler
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+
+  console.log("Error Status:", status);
+  console.log("Error Message:", err.message);
+  console.log("Error Stack:", err.stack);
+
+  res.status(status || 500).json({
+    message: err.message,
+  });
+});
+
 // Establish a connection to the MongoDB database
 mongoose
   .connect(process.env.ATLAS_URI, {
-    // These options remove deprecation warnings in the MongoDB Node.js
-    // driver
+    // These options remove deprecation warnings in the MongoDB Node.js driver
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

@@ -1,32 +1,24 @@
+const asyncHandler = require("express-async-handler");
+const httpError = require("http-errors");
 const bcrypt = require("bcrypt");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-function checkValidObjectId(id, res) {
+exports.validateObjectId = (id) => {
   if (!ObjectId.isValid(id)) {
-    return res.status(400).json({
-      message: "ObjectID is not valid",
-    });
+    throw httpError(400, "ObjectID is not valid");
   }
-}
+};
 
-function verifyCookieExists(cookieName, req, res) {
+exports.checkCookieExists = (cookieName, req) => {
   if (!(cookieName in req.cookies)) {
-    return res.status(404).json({
-      message: "Cookie not found",
-    });
+    throw httpError(400, "Cookie not found");
   }
-}
+};
 
-async function verifyPasswordsMatch(pass1, pass2, res) {
-  try {
-    const isMatch = await bcrypt.compare(pass1, pass2);
+exports.checkPasswordsMatch = asyncHandler(async (pass1, pass2) => {
+  const isMatch = await bcrypt.compare(pass1, pass2);
 
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Password is incorrect",
-      });
-    }
-  } catch (err) {
-    return res.status(500).json(err);
+  if (!isMatch) {
+    throw httpError(401, "Password is incorrect");
   }
-}
+});

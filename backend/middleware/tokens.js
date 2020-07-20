@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 
+const { checkCookieExists } = require("../utils/users");
+
 exports.validateToken = async (req, res, next) => {
-  verifyCookieExists("Authorization", req, res);
+  checkCookieExists("Authorization", req, res);
 
   const token = req.cookies.Authorization.split(" ")[1];
 
