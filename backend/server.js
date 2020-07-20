@@ -31,29 +31,8 @@ mongoose
   .then(() => console.log("MongoDB connection successfully established"))
   .catch((err) => console.log(err));
 
-<<<<<<< HEAD
-mongoose.connect(process.env.ATLAS_URI, {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true, 
-    useCreateIndex: true
-}).then();
-=======
 const port = process.env.PORT || 5000;
->>>>>>> 565dcfcc670dfbce00683a991232b22159da875a
 
 app.listen(port, () => {
   console.log(`Server is up and running on port: ${port}`);
 });
-<<<<<<< HEAD
-
-const usersRouter = require('./routes/users');
-const postsRouter = require('./routes/posts');
-
-app.use('/users', usersRouter);
-app.use('/posts', postsRouter);
-
-app.listen(port, ()=> {
-    console.log(`Server is running on port: ${port}`);
-});
-=======
->>>>>>> 565dcfcc670dfbce00683a991232b22159da875a
