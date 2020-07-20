@@ -1,0 +1,36 @@
+.container {
+  height: 6.7vh;
+}
+
+.nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav li {
+  min-width: 80px;
+  text-align: center;
+}
+
+.nav button {
+  margin-left: 2rem;
+  align-content: center;
+}
+
+.navItem {
+  padding: 2.4vh;
+}
+
+.navItemSelected {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #218fff;
+  font-size: 1rem;
+}
+
+.subNav {
+  display: flex;
+  justify-content: space-between;
+}

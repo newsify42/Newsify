@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(20, 5vh);
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 3;
+}
+
+.form_container {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 8;
+}
