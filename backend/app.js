@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const httpError = require("http-errors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 require("dotenv").config();
@@ -19,11 +20,28 @@ app.use(morgan("dev"));
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 
+// Handles endpoints that aren't found
+app.use((req, res, next) => {
+  next(httpError(404, "Endpoint Not Found"));
+});
+
+// Custom error handler
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+
+  console.log("Error Status:", status);
+  console.log("Error Message:", err.message);
+  console.log("Error Stack:", err.stack);
+
+  res.status(status).json({
+    message: err.message,
+  });
+});
+
 // Establish a connection to the MongoDB database
 mongoose
   .connect(process.env.ATLAS_URI, {
-    // These options remove deprecation warnings in the MongoDB Node.js
-    // driver
+    // These options remove deprecation warnings in the MongoDB Node.js driver
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
