@@ -7,7 +7,7 @@ const { validateObjectId } = require("../utils/users");
 exports.checkEmailDoesNotExist = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (user) {
-    throw httpError(409, "Email already found");
+    throw httpError(409, "Email Found");
   }
 
   next();
@@ -16,7 +16,7 @@ exports.checkEmailDoesNotExist = asyncHandler(async (req, res, next) => {
 exports.findUserByEmail = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    throw httpError(400, "User not found");
+    throw httpError(400, "User Not Found");
   }
 
   req.user = user;
@@ -28,7 +28,7 @@ exports.findUserById = asyncHandler(async (req, res, next) => {
 
   const user = await User.findById(req.id);
   if (!user) {
-    throw httpError(400, "User not found");
+    throw httpError(400, "User Not Found");
   }
 
   req.user = user;

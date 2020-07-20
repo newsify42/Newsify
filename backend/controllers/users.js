@@ -19,7 +19,7 @@ exports.register = asyncHandler(async (req, res) => {
   const user = await newUser.save();
 
   res.status(201).json({
-    message: "New user created",
+    message: "New User Created",
     id: user._id,
   });
 });
@@ -41,7 +41,7 @@ exports.login = asyncHandler(async (req, res) => {
   res.cookie("Authorization", "Bearer " + token);
   // Also return it with the message (for now)
   res.status(200).json({
-    message: "User logged in",
+    message: "User Logged In",
     id: req.user._id,
     token: token,
   });
@@ -53,7 +53,7 @@ exports.updateEmail = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.email });
 
   res.status(200).json({
-    message: "Email updated",
+    message: "Email Updated",
   });
 });
 
@@ -64,6 +64,6 @@ exports.updatePassword = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate({ _id: req.id }, { password: hash });
 
   res.status(200).json({
-    message: "Password updated",
+    message: "Password Updated",
   });
 });
