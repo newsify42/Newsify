@@ -25,6 +25,8 @@ router.route("/logout").post((res) => {
   res.clearCookie("Authorization");
 });
 
+router.route("/confirm_email").post();
+
 router
   .route("/update_email")
   .patch(validateToken, findUserById, checkPasswordsMatch, updateEmail);

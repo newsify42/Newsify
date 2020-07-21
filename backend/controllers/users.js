@@ -4,11 +4,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("../models/user.model");
-const { checkPasswordsMatch } = require("../utils/users");
+const sendMail = require("../utils/send-mail");
 
-saltRounds = 10;
+const saltRounds = 10;
 
 exports.register = asyncHandler(async (req, res) => {
+  await sendMail(req.body.email);
+
   const hash = await bcrypt.hash(req.body.password, saltRounds);
 
   const newUser = new User({
@@ -16,11 +18,11 @@ exports.register = asyncHandler(async (req, res) => {
     password: hash,
   });
 
-  const user = await newUser.save();
+  //const user = await newUser.save();
 
   res.status(201).json({
     message: "New User Created",
-    id: user._id,
+    //id: user._id,
   });
 });
 
