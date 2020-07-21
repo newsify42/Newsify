@@ -2,10 +2,12 @@ const nodemailer = require("nodemailer");
 
 const getOAuthAccessToken = require("./get-oauth-access-token");
 
-module.exports = async (recipient) => {
+module.exports = async (recipient, subject, template) => {
   let transportConfig;
   const testAccount = await nodemailer.createTestAccount(); // Ethereal account
 
+  // Production ("prod") sends an actual email, whereas development ("dev")
+  // uses Ethereal (fake SMTP service)
   if (process.env.NODE_ENV === "prod") {
     // Retrieves the OAuth access token needed to send the emails
     const accessToken = getOAuthAccessToken();
@@ -24,8 +26,7 @@ module.exports = async (recipient) => {
       },
     };
   } else if (process.env.NODE_ENV === "dev") {
-    // Sets up a transport configuration to the Ethereal site (fake SMTP
-    // service)
+    // Sets up a transport configuration to the Ethereal site
     transportConfig = {
       host: "smtp.ethereal.email",
       port: 587,
@@ -44,15 +45,13 @@ module.exports = async (recipient) => {
   const mailSchema = {
     from: `"Newsify" ${process.env.SENDER_EMAIL}`,
     to: recipient,
-    subject: "Hello",
-    text: "Hello world?",
-    html: "<b>Hello world?</b>",
+    subject: subject,
+    html: template,
   };
 
   const info = await transporter.sendMail(mailSchema);
 
-  // Prints the url for the Ethereal site (fake SMTP service) that receives
-  // the confirmation email
+  // Prints the url for the Ethereal site that receives the confirmation email
   if (process.env.NODE_ENV === "dev") {
     console.log("Confirmation Email:", nodemailer.getTestMessageUrl(info));
   }

@@ -1,41 +1,49 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("../models/user.model");
+const emailTemplate = require("../templates/confirm-email");
+const generateToken = require("../utils/generate-token");
 const sendMail = require("../utils/send-mail");
 
 const saltRounds = 10;
 
 exports.register = asyncHandler(async (req, res) => {
-  await sendMail(req.body.email);
+  const email = req.body.email;
+  const emailToken = await generateToken(
+    { email: email },
+    process.env.EMAIL_TOKEN_SECRET
+  );
+
+  await sendMail(email, "Confirm Email", emailTemplate(email, emailToken));
 
   const hash = await bcrypt.hash(req.body.password, saltRounds);
-
   const newUser = new User({
-    email: req.body.email,
+    email: email,
     password: hash,
   });
 
-  //const user = await newUser.save();
+  const user = await newUser.save();
 
   res.status(201).json({
     message: "New User Created",
-    //id: user._id,
+    id: user._id,
+    email_token: emailToken,
   });
 });
 
 exports.login = asyncHandler(async (req, res) => {
-  // Creates the JWT
-  const token = await jwt.sign(
-    {
-      id: req.user._id,
-    },
-    process.env.TOKEN_SECRET,
-    // Token currently expires after 3 hours
-    { expiresIn: "3h" }
+  if (!req.user.emailConfirmed) {
+    throw httpError(403, "Confirm Email");
+  }
+
+  const loginToken = await generateToken(
+    { id: req.user._id },
+    process.env.LOGIN_TOKEN_SECRET
   );
+
+  console.log(token);
 
   // Store the JWT in a cookie
   res.cookie("Authorization", "Bearer " + token);
@@ -43,9 +51,11 @@ exports.login = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "User Logged In",
     id: req.user._id,
-    token: token,
+    login_token: loginToken,
   });
 });
+
+exports.confirmEmail = asyncHandler(async (req, res) => {});
 
 exports.updateEmail = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.newEmail });
