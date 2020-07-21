@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const httpError = require("http-errors");
 require("dotenv").config();
 
 const User = require("../models/user.model");
@@ -11,12 +12,6 @@ const saltRounds = 10;
 
 exports.register = asyncHandler(async (req, res) => {
   const email = req.body.email;
-  const emailToken = await generateToken(
-    { email: email },
-    process.env.EMAIL_TOKEN_SECRET
-  );
-
-  await sendMail(email, "Confirm Email", emailTemplate(email, emailToken));
 
   const hash = await bcrypt.hash(req.body.password, saltRounds);
   const newUser = new User({
@@ -25,6 +20,15 @@ exports.register = asyncHandler(async (req, res) => {
   });
 
   const user = await newUser.save();
+
+  // Token used to confirm the email
+  const emailToken = await generateToken(
+    { id: user._id },
+    process.env.EMAIL_TOKEN_SECRET
+  );
+
+  // Sending the confirmation email
+  await sendMail(email, "Confirm Email", emailTemplate(email, emailToken));
 
   res.status(201).json({
     message: "New User Created",
@@ -35,18 +39,19 @@ exports.register = asyncHandler(async (req, res) => {
 
 exports.login = asyncHandler(async (req, res) => {
   if (!req.user.emailConfirmed) {
-    throw httpError(403, "Confirm Email");
+    throw httpError(403, "Confirm Email Address");
   }
 
+  // Token used to login
   const loginToken = await generateToken(
     { id: req.user._id },
     process.env.LOGIN_TOKEN_SECRET
   );
 
-  console.log(token);
+  console.log(loginToken);
 
   // Store the JWT in a cookie
-  res.cookie("Authorization", "Bearer " + token);
+  res.cookie("Authorization", "Bearer " + loginToken);
   // Also return it with the message (for now)
   res.status(200).json({
     message: "User Logged In",
@@ -55,7 +60,13 @@ exports.login = asyncHandler(async (req, res) => {
   });
 });
 
-exports.confirmEmail = asyncHandler(async (req, res) => {});
+exports.confirmEmail = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate({ _id: req.id }, { emailConfirmed: true });
+
+  res.status(200).json({
+    message: "Email Confirmed",
+  });
+});
 
 exports.updateEmail = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.newEmail });
