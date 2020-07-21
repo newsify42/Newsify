@@ -1,6 +1,6 @@
+const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const httpError = require("http-errors");
-const bcrypt = require("bcrypt");
 
 const User = require("../models/user.model");
 const { validateObjectId } = require("../utils/users");
