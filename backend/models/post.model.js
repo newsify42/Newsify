@@ -8,9 +8,8 @@ const postSchema = new Schema(
     title: { type: String, required: true },
     content: { type: String, required: true }, //Content for full version, when clicked into article
     summary: { type: String, required: true }, //Summary of post to be displayed on the feed
-    likes: Number,
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    reports: [{ type: Schema.Types.ObjectId, ref: "Report" }],
+    likes: {type: Number , default: 0}
+    //comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
   },
 
   {

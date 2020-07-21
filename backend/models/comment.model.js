@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-const mongoose = require('mongoose');
-//const Comments = require("Comment");
-const Schema = mongoose.Schema;
-
-const commentSchema = new Schema({
-    username: {type: String, required: true, unique: false},
-    content: String,
-    likes: Number,
-    // comments: Array
-},
-
-    {
-        timestamps: true
-    }
-);
-const Comment = mongoose.model('Comment', commentSchema);
-
-module.exports = Post;
-=======
 const mongoose = require("mongoose");
 //const Comments = require("Comment");
 const Schema = mongoose.Schema;
@@ -25,7 +5,8 @@ const Schema = mongoose.Schema;
 const commentSchema = new Schema(
   {
     username: { type: String, required: true, unique: false },
-    content: String,
+    iD: {type: String, required: true},
+    content: {type: String, required: true},
     likes: Number,
     // comments: Array
   },
@@ -36,5 +17,4 @@ const commentSchema = new Schema(
 );
 const Comment = mongoose.model("Comment", commentSchema);
 
-module.exports = Post;
->>>>>>> 565dcfcc670dfbce00683a991232b22159da875a
+module.exports = Comment;

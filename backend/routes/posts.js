@@ -1,7 +1,8 @@
 const router = require("express").Router();
 let Post = require("../models/post.model");
 let Report = require("../models/report.model");
-//let Comment = require('../models/comment.model');
+let Comment = require('../models/comment.model');
+const { findById, collection } = require("../models/post.model");
 
 router.route("/").get((req, res) => {
   Post.find()
@@ -54,9 +55,9 @@ router.route("/report").post((req, res) => {
 
   const newReport = new Report({
     username: username,
-    reortedID: postID,
+    reportedID: postID,
     offense: offense,
-    content: content,
+    content: content
   });
 
   newReport
@@ -67,5 +68,36 @@ router.route("/report").post((req, res) => {
   //Post.findById(postID).
   //Still need to add the report object to an array in the post object
 });
+
+router.route("/comment").post((req, res) => {
+    const username = req.body.username;
+    const iD = req.body.iD;
+    const content = req.body.comment;
+  
+    const newComment = new Comment({
+      username: username,
+      iD: iD,
+      content: content
+    });
+  
+    newComment
+      .save()
+      .then(() => res.json("Comment added!"))
+      .catch((err) => res.status(400).json("Error: " + err));
+  
+  });
+
+  router.route("/like").put((req, res) => {
+    const iD = req.body.iD;
+    
+    Post.findOneAndUpdate( {_id: iD}, 
+        {$inc : {'likes' : 1}}, 
+        {new: true}, 
+        function(err, response) { 
+             res.end();
+        })
+
+  });
+
 
 module.exports = router;
