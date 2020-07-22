@@ -62,8 +62,38 @@ export default function UpdatePasswordForm() {
     }
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await justAxios().patch("users/update_password");
+      console.log(res);
+      await setAlert({
+        message: "Password successfuly updated",
+        type: "success"
+      });
+      setUser({ password: "", newPassword: "" });
+      setFormFeedback({
+        password: { validationStatus: null, help: null },
+        newPassword: { validationStatus: null, help: null }
+      });
+    } catch (error) {
+      console.log(error);
+      setAlert({ message: "Could not update password", type: "error" });
+      setFormFeedback({
+        ...formFeedback,
+        password: {
+          validationStatus: "error",
+          help: "Incorrect Password"
+        }
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <Form.Item
         hasFeedback
         validateStatus={formFeedback.newPassword.validationStatus}
@@ -100,6 +130,7 @@ export default function UpdatePasswordForm() {
         <Button
           type="primary"
           htmlType="submit"
+          onClick={handleSubmit}
           loading={isLoading}
           disabled={
             formFeedback.newPassword.validationStatus !== "success" ||

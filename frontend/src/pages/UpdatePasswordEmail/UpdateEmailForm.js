@@ -61,8 +61,38 @@ export default function UpdateEmailForm() {
     }
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await justAxios().patch("users/update_password");
+      console.log(res);
+      await setAlert({
+        message: "Email successfuly updated",
+        type: "success"
+      });
+      setUser({ email: "", password: "" });
+      setFormFeedback({
+        email: { validationStatus: null, help: null },
+        password: { validationStatus: null, help: null }
+      });
+    } catch (error) {
+      console.log(error);
+      setAlert({ message: "Could not update email", type: "error" });
+      setFormFeedback({
+        ...formFeedback,
+        password: {
+          validationStatus: "error",
+          help: "Incorrect Password"
+        }
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <Form.Item
         hasFeedback
         validateStatus={formFeedback.email.validationStatus}
@@ -99,6 +129,7 @@ export default function UpdateEmailForm() {
         <Button
           type="primary"
           htmlType="submit"
+          onClick={handleSubmit}
           loading={isLoading}
           disabled={
             formFeedback.email.validationStatus !== "success" ||
