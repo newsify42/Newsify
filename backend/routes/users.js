@@ -7,11 +7,15 @@ const {
   checkPasswordsMatch,
 } = require("../middleware/users");
 
-const { validateToken } = require("../middleware/tokens");
+const {
+  validateEmailToken,
+  validateLoginToken,
+} = require("../middleware/tokens");
 
 const {
-  login,
   register,
+  login,
+  confirmEmail,
   updateEmail,
   updatePassword,
   deleteUser,
@@ -26,15 +30,19 @@ router.route("/logout").post((res) => {
 });
 
 router
+  .route("/confirm_email/:token")
+  .post(validateEmailToken, findUserById, confirmEmail);
+
+router
   .route("/update_email")
-  .patch(validateToken, findUserById, checkPasswordsMatch, updateEmail);
+  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updateEmail);
 
 router
   .route("/update_password")
-  .patch(validateToken, findUserById, checkPasswordsMatch, updatePassword);
+  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updatePassword);
 
 router
   .route("/delete_user")
-  .delete(validateToken, findUserById, checkPasswordsMatch, deleteUser);
+  .delete(validateLoginToken, findUserById, checkPasswordsMatch, deleteUser);
 
 module.exports = router;
