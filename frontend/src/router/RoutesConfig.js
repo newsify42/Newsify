@@ -1,17 +1,17 @@
 import React from "react";
+import decode from "jwt-decode";
 import { Redirect } from "react-router-dom";
 
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
-import decode from "jwt-decode";
+import UpdateForm from "../pages/UpdatePasswordEmail/UpdateForm";
 
 function checkToken() {
   try {
     let token = localStorage.getItem("token");
     const decoded = decode(token);
     if (
-      decoded.hasOwnProperty("email") &&
       decoded.hasOwnProperty("exp") &&
       decoded.hasOwnProperty("iat") &&
       decoded.hasOwnProperty("id")
@@ -36,6 +36,10 @@ const RoutesConfig = [
   {
     path: "/",
     render: () => createPrivateRoute(Home)
+  },
+  {
+    path: "/update",
+    render: () => createPrivateRoute(UpdateForm)
   },
   {
     path: "/login",
