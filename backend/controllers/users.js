@@ -53,8 +53,6 @@ exports.login = asyncHandler(async (req, res) => {
     process.env.LOGIN_TOKEN_SECRET
   );
 
-  console.log(loginToken);
-
   // Store the JWT in a cookie
   res.cookie("Authorization", "Bearer " + loginToken);
   // Also return it with the message (for now)

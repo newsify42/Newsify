@@ -36,6 +36,8 @@ router
 
 router.route("/forget_password").post(findUserByEmail, forgetPassword);
 
+router.route("/reset_password/:token").post(validateEmailToken, updatePassword);
+
 router
   .route("/update_email")
   .patch(validateLoginToken, findUserById, checkPasswordsMatch, updateEmail);
