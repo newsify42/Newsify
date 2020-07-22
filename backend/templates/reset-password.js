@@ -1,15 +1,15 @@
 const Mailgen = require("mailgen");
+require("dotenv").config();
 
-module.exports = (recipient) => {
+module.exports = (recipient, token) => {
   const mailGenerator = new Mailgen({
     theme: "cerberus",
     product: {
       name: "Newsify",
-      link: "http://localhost:5000", // link is required
+      link: process.env.WEBSITE_URI, // link is required
     },
   });
 
-  // Prepare email contents
   const email = {
     body: {
       name: recipient,
@@ -20,7 +20,8 @@ module.exports = (recipient) => {
         button: {
           color: "#DC4D2F",
           text: "Reset your password",
-          link: "http://localhost:5000/confirm_email",
+          // Token is attached to the email with the appropriate endpoint
+          link: `${process.env.WEBSITE_URI}:${process.env.PORT}/users/reset_password/${token}`,
         },
       },
       outro:

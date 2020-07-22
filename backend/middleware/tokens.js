@@ -7,7 +7,7 @@ const validateToken = require("../utils/validate-token");
 exports.validateEmailToken = asyncHandler(async (req, res, next) => {
   const payload = await validateToken(
     req.params.token,
-    process.env.EMAIL_TOKEN_SECRET
+    process.env.CONFIRM_EMAIL_TOKEN_SECRET
   );
 
   req.id = payload.id;
