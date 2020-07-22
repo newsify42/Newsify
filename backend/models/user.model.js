@@ -16,6 +16,10 @@ const userSchema = new Schema(
       trim: true,
       minlength: 3,
     },
+    emailConfirmed: {
+      type: Boolean,
+      defaultValue: false,
+    },
   },
   {
     timestamps: true,
