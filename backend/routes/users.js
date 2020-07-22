@@ -31,7 +31,7 @@ router.route("/logout").post((res) => {
 
 router
   .route("/confirm_email/:token")
-  .post(validateEmailToken, findUserById, confirmEmail);
+  .get(validateEmailToken, findUserById, confirmEmail);
 
 router
   .route("/update_email")
