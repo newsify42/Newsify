@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
-import UpdateForm from "../pages/UpdatePasswordEmail/UpdateForm";
 import UpdatePasswordForm from "../pages/UpdatePasswordEmail/UpdatePasswordFrom";
 import UpdateEmailForm from "../pages/UpdatePasswordEmail/UpdateEmailForm";
 

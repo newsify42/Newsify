@@ -96,7 +96,17 @@ export default function UpdateEmailForm() {
         />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          disabled={
+            formFeedback.email.validationStatus !== "success" ||
+            formFeedback.password.validationStatus !== "success"
+              ? true
+              : false
+          }
+        >
           Update
         </Button>
       </Form.Item>
