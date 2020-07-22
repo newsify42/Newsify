@@ -97,7 +97,17 @@ export default function UpdatePasswordForm() {
         />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          disabled={
+            formFeedback.newPassword.validationStatus !== "success" ||
+            formFeedback.password.validationStatus !== "success"
+              ? true
+              : false
+          }
+        >
           Update
         </Button>
       </Form.Item>
