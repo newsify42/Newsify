@@ -6,11 +6,11 @@ export default function UpdateEmailForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState({ message: null, type: null });
   const [user, setUser] = useState({
-    email: "",
+    newEmail: "",
     password: ""
   });
   const [formFeedback, setFormFeedback] = useState({
-    email: { validationStatus: null, help: null },
+    newEmail: { validationStatus: null, help: null },
     password: { validationStatus: null, help: null }
   });
 
@@ -24,23 +24,23 @@ export default function UpdateEmailForm() {
   const formValidation = e => {
     let inputString = e.target.value;
     let inputType = e.target.name;
-    if (inputType === "email") {
+    if (inputType === "newEmail") {
       const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       const email = inputString.match(emailRegex);
       if (email) {
         setFormFeedback({
           ...formFeedback,
-          email: { validationStatus: "success", help: null }
+          newEmail: { validationStatus: "success", help: null }
         });
       } else if (inputString === "") {
         setFormFeedback({
           ...formFeedback,
-          email: { validationStatus: null, help: null }
+          newEmail: { validationStatus: null, help: null }
         });
       } else {
         setFormFeedback({
           ...formFeedback,
-          email: { validationStatus: "warning", help: "Not a valid email" }
+          newEmail: { validationStatus: "warning", help: "Not a valid email" }
         });
       }
     } else if (inputType === "password") {
@@ -95,14 +95,14 @@ export default function UpdateEmailForm() {
     <Form onSubmit={handleSubmit}>
       <Form.Item
         hasFeedback
-        validateStatus={formFeedback.email.validationStatus}
-        help={formFeedback.email.help}
+        validateStatus={formFeedback.newEmail.validationStatus}
+        help={formFeedback.newEmail.help}
       >
         <Input
-          placeholder="email"
+          placeholder="new email"
           type="text"
-          name="email"
-          value={user.email}
+          name="newEmail"
+          value={user.newEmail}
           onChange={event => {
             handleChange(event);
             formValidation(event);
@@ -132,7 +132,7 @@ export default function UpdateEmailForm() {
           onClick={handleSubmit}
           loading={isLoading}
           disabled={
-            formFeedback.email.validationStatus !== "success" ||
+            formFeedback.newEmail.validationStatus !== "success" ||
             formFeedback.password.validationStatus !== "success"
               ? true
               : false
