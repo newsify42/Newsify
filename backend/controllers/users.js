@@ -4,7 +4,8 @@ const httpError = require("http-errors");
 require("dotenv").config();
 
 const User = require("../models/user.model");
-const emailTemplate = require("../templates/confirm-email");
+const confirmEmailTemplate = require("../templates/confirm-email");
+const resetPasswordTemplate = require("../templates/reset-password");
 const generateToken = require("../utils/generate-token");
 const sendMail = require("../utils/send-mail");
 
@@ -22,18 +23,22 @@ exports.register = asyncHandler(async (req, res) => {
   const user = await newUser.save();
 
   // Token used to confirm the email
-  const emailToken = await generateToken(
+  const confirmEmailToken = await generateToken(
     { id: user._id },
-    process.env.EMAIL_TOKEN_SECRET
+    process.env.CONFIRM_EMAIL_TOKEN_SECRET
   );
 
   // Sending the confirmation email
-  await sendMail(email, "Confirm Email", emailTemplate(email, emailToken));
+  await sendMail(
+    email,
+    "Welcome to Newsify",
+    confirmEmailTemplate(email, confirmEmailToken)
+  );
 
   res.status(201).json({
     message: "New User Created",
     id: user._id,
-    email_token: emailToken,
+    email_token: confirmEmailToken,
   });
 });
 
@@ -48,15 +53,13 @@ exports.login = asyncHandler(async (req, res) => {
     process.env.LOGIN_TOKEN_SECRET
   );
 
-  console.log(loginToken);
-
   // Store the JWT in a cookie
   res.cookie("Authorization", "Bearer " + loginToken);
   // Also return it with the message (for now)
   res.status(200).json({
     message: "User Logged In",
     id: req.user._id,
-    login_token: loginToken,
+    loginToken: loginToken,
   });
 });
 
@@ -65,6 +68,24 @@ exports.confirmEmail = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     message: "Email Confirmed",
+  });
+});
+
+exports.forgetPassword = asyncHandler(async (req, res) => {
+  const resetPasswordToken = await generateToken(
+    { id: req.user._id },
+    process.env.RESET_PASSWORD_TOKEN_SECRET
+  );
+
+  await sendMail(
+    req.body.email,
+    "Password Reset",
+    resetPasswordTemplate(req.body.email, resetPasswordToken)
+  );
+
+  res.status(200).json({
+    message: "Password Reset Email Sent",
+    resetToken: resetPasswordToken,
   });
 });
 
