@@ -65,8 +65,8 @@ export default function UpdateEmailForm() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      let token = localStorage.getItem("token");
       //this is a temp fix *** remember to get rid of it ***
+      let token = localStorage.getItem("token");
       user.token = token;
       const res = await justAxios().patch("users/update_email", user);
       console.log(res);

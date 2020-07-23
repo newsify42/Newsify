@@ -66,6 +66,9 @@ export default function UpdatePasswordForm() {
     e.preventDefault();
     try {
       setIsLoading(true);
+      //this is a temp fix *** remember to get rid of it ***
+      let token = localStorage.getItem("token");
+      user.token = token;
       const res = await justAxios().patch("users/update_password", user);
       console.log(res);
       await setAlert({
