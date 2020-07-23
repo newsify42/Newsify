@@ -1,0 +1,10 @@
+.formContainer {
+  width: 30%;
+  margin: 15% 35%;
+  position: fixed;
+  height: 100%;
+}
+
+.formContainer button {
+  width: 100%;
+}
