@@ -65,7 +65,10 @@ export default function UpdateEmailForm() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const res = await justAxios().patch("users/update_password", user);
+      let token = localStorage.getItem("token");
+      //this is a temp fix *** remember to get rid of it ***
+      user.token = token;
+      const res = await justAxios().patch("users/update_email", user);
       console.log(res);
       await setAlert({
         message: "Email successfuly updated",
@@ -73,7 +76,7 @@ export default function UpdateEmailForm() {
       });
       setUser({ email: "", password: "" });
       setFormFeedback({
-        email: { validationStatus: null, help: null },
+        newEmail: { validationStatus: null, help: null },
         password: { validationStatus: null, help: null }
       });
     } catch (error) {
