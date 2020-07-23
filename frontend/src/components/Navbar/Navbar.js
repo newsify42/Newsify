@@ -12,7 +12,7 @@ const Navbar = props => {
     localStorage.clear();
   };
   return (
-    <Layout>
+    <Layout className={styles.layout}>
       <Header className={styles.container}>
         <Menu
           theme="dark"
@@ -82,7 +82,7 @@ const Navbar = props => {
           </Link>
         </Menu>
       </Header>
-      <Content>
+      <Content className={styles.content}>
         <SubNav />
         {props.children}
       </Content>
