@@ -65,7 +65,7 @@ export default function UpdateEmailForm() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const res = await justAxios().patch("users/update_password");
+      const res = await justAxios().patch("users/update_password", user);
       console.log(res);
       await setAlert({
         message: "Email successfuly updated",
