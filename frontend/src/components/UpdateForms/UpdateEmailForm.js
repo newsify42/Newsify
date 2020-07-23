@@ -118,7 +118,7 @@ export default function UpdateEmailForm() {
         help={formFeedback.password.help}
       >
         <Input
-          placeholder="current password"
+          placeholder="password"
           type="password"
           name="password"
           value={user.password}
@@ -144,6 +144,11 @@ export default function UpdateEmailForm() {
           Update
         </Button>
       </Form.Item>
+      <Alert
+        message={alert.message}
+        type={alert.type}
+        afterClose={() => setAlert({ message: null, type: null })}
+      />
     </Form>
   );
 }

@@ -145,6 +145,11 @@ export default function UpdatePasswordForm() {
           Update
         </Button>
       </Form.Item>
+      <Alert
+        message={alert.message}
+        type={alert.type}
+        afterClose={() => setAlert({ message: null, type: null })}
+      />
     </Form>
   );
 }
