@@ -1,13 +1,13 @@
 import React from "react";
-import Form from "../../components/UpdateForms/UpdatePasswordFrom";
+import Form from "../../components/UpdateForms/UpdatePasswordForm";
 import Nav from "../../components/Navbar/Navbar";
 
 export default function UpdatePasswordFrom() {
   return (
     <Nav>
-      <div className={styles.container}>
-        <h1 className={styles.header}>Update Password.</h1>
-        <div className={styles.form_container}>
+      <div>
+        <h1>Update Password.</h1>
+        <div>
           <Form />
         </div>
       </div>

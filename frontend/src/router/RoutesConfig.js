@@ -5,8 +5,8 @@ import { Redirect } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
-import UpdatePasswordForm from "../pages/UpdatePasswordEmail/UpdatePasswordFrom";
-import UpdateEmailForm from "../pages/UpdatePasswordEmail/UpdateEmailForm";
+import UpdatePasswordForm from "../pages/UpdatePassword/UpdatePassword";
+import UpdateEmailForm from "../pages/UpdateEmail/UpdateEmail";
 
 function checkToken() {
   try {
