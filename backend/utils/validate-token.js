@@ -5,6 +5,6 @@ module.exports = async (token, secret) => {
   try {
     return await jwt.verify(token, secret);
   } catch (err) {
-    throw httpError(403, "Confirm Email");
+    throw httpError(403, err.message);
   }
 };

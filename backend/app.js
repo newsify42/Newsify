@@ -32,6 +32,7 @@ app.use((err, req, res, next) => {
   console.log("Error Status:", status);
   console.log("Error Message:", err.message);
   console.log("Error Stack:", err.stack);
+  console.log();
 
   res.status(status).json({
     message: err.message,

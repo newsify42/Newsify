@@ -16,6 +16,7 @@ const {
   register,
   login,
   confirmEmail,
+  forgetPassword,
   updateEmail,
   updatePassword,
   deleteUser,
@@ -25,13 +26,17 @@ router.route("/register").post(checkEmailDoesNotExist, register);
 
 router.route("/login").post(findUserByEmail, checkPasswordsMatch, login);
 
-router.route("/logout").post((res) => {
+router.route("/logout").post((req, res) => {
   res.clearCookie("Authorization");
 });
 
 router
   .route("/confirm_email/:token")
-  .post(validateEmailToken, findUserById, confirmEmail);
+  .get(validateEmailToken, findUserById, confirmEmail);
+
+router.route("/forget_password").post(findUserByEmail, forgetPassword);
+
+router.route("/reset_password/:token").post(validateEmailToken, updatePassword);
 
 router
   .route("/update_email")

@@ -21,7 +21,7 @@ module.exports = (recipient, token) => {
           color: "#FFC200",
           text: "Confirm your email",
           // Token is attached to the email with the appropriate endpoint
-          link: `${process.env.WEBSITE_URI}/confirm_email/${token}`,
+          link: `${process.env.WEBSITE_URI}:${process.env.PORT}/users/confirm_email/${token}`,
         },
       },
       outro:
