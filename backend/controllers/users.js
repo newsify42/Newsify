@@ -20,11 +20,11 @@ exports.register = asyncHandler(async (req, res) => {
     password: hash,
   });
 
-  const user = await newUser.save();
+  await newUser.save();
 
   // Token used to confirm the email
   const confirmEmailToken = await generateToken(
-    { id: user._id },
+    { id: newUser._id },
     process.env.CONFIRM_EMAIL_TOKEN_SECRET
   );
 

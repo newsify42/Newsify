@@ -14,7 +14,7 @@ exports.validateEmailToken = asyncHandler(async (req, res, next) => {
     secret = process.env.RESET_PASSWORD_TOKEN_SECRET;
   }
 
-  const payload = await validateToken(req.params.token, secret);
+  const payload = await validateToken(req.params.emailToken, secret);
 
   req.id = payload.id;
   next();
@@ -26,12 +26,12 @@ exports.validateLoginToken = asyncHandler(async (req, res, next) => {
   // checkCookieExists("Authorization", req, res);
   // const token = req.cookies.Authorization.split(" ")[1];
 
-  if (!req.body.token) {
+  if (!req.body.loginToken) {
     throw httpError(400, "Token Not Present");
   }
 
   const payload = await validateToken(
-    req.body.token,
+    req.body.loginToken,
     process.env.LOGIN_TOKEN_SECRET
   );
 
