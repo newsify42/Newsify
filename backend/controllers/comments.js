@@ -42,7 +42,7 @@ exports.addComment = asyncHandler(async (req, res) => {
 
 exports.updateComment = asyncHandler(async (req, res) => {
   await Comment.findByIdAndUpdate(
-    { _id: req.body.id },
+    { _id: req.params.id },
     { comment: req.body.newComment }
   );
 
@@ -52,7 +52,7 @@ exports.updateComment = asyncHandler(async (req, res) => {
 });
 
 exports.deleteComment = asyncHandler(async (req, res) => {
-  await Comment.findByIdAndRemove({ _id: req.body.id });
+  await Comment.findByIdAndRemove({ _id: req.params.id });
 
   res.status(200).json({
     message: "Comment Deleted",

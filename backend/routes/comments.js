@@ -8,14 +8,14 @@ const {
   deleteComment,
 } = require("../controllers/comments");
 
-router.route("/get_comment/:id").get(getComment);
+const { validateLoginToken } = require("../middleware/tokens");
 
-router.route("/get_all_comments").get(getAllComments);
+router.route("/").get(getAllComments).post(validateLoginToken, addComment);
 
-router.route("/add_comment").post(addComment);
-
-router.route("/update_comment").patch(updateComment);
-
-router.route("/delete_comment").delete(deleteComment);
+router
+  .route("/:id")
+  .get(getComment)
+  .patch(validateLoginToken, updateComment)
+  .delete(validateLoginToken, deleteComment);
 
 module.exports = router;
