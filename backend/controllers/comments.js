@@ -27,8 +27,8 @@ exports.getAllComments = asyncHandler(async (req, res) => {
 
 exports.addComment = asyncHandler(async (req, res) => {
   const newComment = new Comment({
-    userName: req.body.user_name,
-    postId: req.body.post_id,
+    userName: req.body.userName,
+    postId: req.body.postId,
     comment: req.body.comment,
   });
 

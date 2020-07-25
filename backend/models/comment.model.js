@@ -8,9 +8,10 @@ const commentSchema = new Schema(
       required: true,
     },
     postId: {
-      type: mongoose.ObjectId,
-      ref: "Post",
-      //type: Number,
+      // Use a Number because it's easier to test for now
+      //type: mongoose.ObjectId,
+      //ref: "Post",
+      type: Number,
       required: true,
     },
     comment: {
