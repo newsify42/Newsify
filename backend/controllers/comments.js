@@ -3,6 +3,16 @@ const httpError = require("http-errors");
 
 const Comment = require("../models/comment.model");
 
+exports.getComment = asyncHandler(async (req, res) => {
+  const comment = await Comment.find({ _id: req.params.id });
+
+  if (!comment.length) {
+    throw httpError(400, "Comment Not found");
+  }
+
+  res.status(200).json(comment);
+});
+
 exports.getAllComments = asyncHandler(async (req, res) => {
   const comments = await Comment.find();
 
@@ -13,4 +23,38 @@ exports.getAllComments = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json(comments);
+});
+
+exports.addComment = asyncHandler(async (req, res) => {
+  const newComment = new Comment({
+    userName: req.body.user_name,
+    postId: req.body.post_id,
+    comment: req.body.comment,
+  });
+
+  await newComment.save();
+
+  res.status(201).json({
+    message: "Comment Created",
+    id: newComment._id,
+  });
+});
+
+exports.updateComment = asyncHandler(async (req, res) => {
+  await Comment.findByIdAndUpdate(
+    { _id: req.body.id },
+    { comment: req.body.newComment }
+  );
+
+  res.status(200).json({
+    message: "Comment Updated",
+  });
+});
+
+exports.deleteComment = asyncHandler(async (req, res) => {
+  await Comment.findByIdAndRemove({ _id: req.body.id });
+
+  res.status(200).json({
+    message: "Comment Deleted",
+  });
 });
