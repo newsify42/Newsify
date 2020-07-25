@@ -89,8 +89,8 @@ Request body:
 
 ```
 {
-  // userName and postId will be generated or queried automatically in the future
   "loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTg0NWM1MjQ5ZTY2N2EwZjQ0OWY5MCIsImlhdCI6MTU5NTY4NDEzNywiZXhwIjoxNTk1Njk0OTM3fQ.kr_h3tspUHxjhSMuuvlp6FDG3aikR8a-tmNH90ndBk8",
+  // userName and postId will be generated or queried automatically in the future
   "userName": "Darragh",
   "postId": "123",
   "comment": "This is a comment!"
@@ -134,7 +134,9 @@ Response body:
 Request body:
 
 ```
-{}
+{
+  "loginToken": eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTg0NWM1MjQ5ZTY2N2EwZjQ0OWY5MCIsImlhdCI6MTU5NTY4NDEzNywiZXhwIjoxNTk1Njk0OTM3fQ.kr_h3tspUHxjhSMuuvlp6FDG3aikR8a-tmNH90ndBk8,
+}
 ```
 
 Response body:
