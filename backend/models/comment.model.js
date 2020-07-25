@@ -3,15 +3,20 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema(
   {
-    userName: {
+    username: {
       type: String,
       required: true,
     },
-    postId: {
+    userId: {
+      type: mongoose.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    articleId: {
       // Use a Number because it's easier to test for now
-      //type: mongoose.ObjectId,
-      //ref: "Post",
-      type: Number,
+      type: mongoose.ObjectId,
+      ref: "Post",
+      //type: Number,
       required: true,
     },
     comment: {

@@ -9,8 +9,12 @@ const {
 } = require("../controllers/comments");
 
 const { validateLoginToken } = require("../middleware/tokens");
+const { getUsername } = require("../middleware/username");
 
-router.route("/").get(getAllComments).post(validateLoginToken, addComment);
+router
+  .route("/")
+  .get(getAllComments)
+  .post(validateLoginToken, getUsername, addComment);
 
 router
   .route("/:id")

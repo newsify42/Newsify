@@ -6,22 +6,27 @@ const threadUsername = require("../models/thread_usernames.model");
 
 exports.getUsername = asyncHandler(async (req, res, next) => {
   const userId = req.body.userId;
-  const articleId = req.articleId;
+  const articleId = req.body.articleId;
 
-  let username = await threadUsername.find({
+  let username = await threadUsername.findOne({
     userId: userId,
-    articleId: articleId
+    articleId: articleId,
   });
+
   if (username) {
-    req.body.username = username;
+    req.username = username.username;
   } else {
     const newUsername = rug.generate();
-    const username = await threadUsername.save({
-      user_id: user_id,
-      article_id: article_id,
-      username: newUsername
+
+    username = new threadUsername({
+      userId: userId,
+      articleId: articleId,
+      username: newUsername,
     });
-    req.username = username;
+
+    await username.save();
+
+    req.username = newUsername;
   }
   next();
 });
