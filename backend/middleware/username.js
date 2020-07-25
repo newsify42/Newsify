@@ -5,21 +5,21 @@ let rug = require("random-username-generator");
 const threadUsername = require("../models/thread_usernames.model");
 
 exports.getUsername = asyncHandler(async (req, res, next) => {
-  let user_id = req.body.user_id;
-  let article_id = req.article_id;
+  const userId = req.body.userId;
+  const articleId = req.articleId;
 
   let username = await threadUsername.find({
-    user_id: user_id,
-    article_id: article_id
+    userId: userId,
+    articleId: articleId
   });
   if (username) {
     req.body.username = username;
   } else {
-    let new_username = rug.generate();
-    let username = await threadUsername.save({
+    const newUsername = rug.generate();
+    const username = await threadUsername.save({
       user_id: user_id,
       article_id: article_id,
-      username: new_username
+      username: newUsername
     });
     req.username = username;
   }

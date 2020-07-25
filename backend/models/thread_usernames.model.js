@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const threadUsernameSchema = new Schema({
-  user_id: {
+  userId: {
     type: mongoose.Types.ObjectId,
     required: true,
     unique: true,
     ref: "User"
   },
-  article_id: {
+  articleId: {
     type: mongoose.Types.ObjectId,
     required: true,
     unique: true,
