@@ -6,7 +6,7 @@ const threadUsername = require("../models/thread_usernames.model");
 
 exports.getUsername = asyncHandler(async (req, res, next) => {
   let user_id = req.body.user_id;
-  let article_id = req.body.article_id;
+  let article_id = req.article_id;
 
   let username = await threadUsername.find({
     user_id: user_id,
@@ -21,7 +21,7 @@ exports.getUsername = asyncHandler(async (req, res, next) => {
       article_id: article_id,
       username: new_username
     });
-    req.body.username = username;
+    req.username = username;
   }
   next();
 });
