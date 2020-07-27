@@ -31,12 +31,14 @@ router.route("/logout").post((req, res) => {
 });
 
 router
-  .route("/confirm_email/:token")
+  .route("/confirm_email/:emailToken")
   .get(validateEmailToken, findUserById, confirmEmail);
 
 router.route("/forget_password").post(findUserByEmail, forgetPassword);
 
-router.route("/reset_password/:token").post(validateEmailToken, updatePassword);
+router
+  .route("/reset_password/:emailToken")
+  .post(validateEmailToken, updatePassword);
 
 router
   .route("/update_email")

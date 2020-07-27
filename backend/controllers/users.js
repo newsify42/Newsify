@@ -37,8 +37,8 @@ exports.register = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: "New User Created",
-    id: user._id,
-    email_token: confirmEmailToken,
+    id: newUser._id,
+    emailToken: confirmEmailToken,
   });
 });
 
@@ -85,7 +85,7 @@ exports.forgetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     message: "Password Reset Email Sent",
-    resetToken: resetPasswordToken,
+    emailToken: resetPasswordToken,
   });
 });
 
