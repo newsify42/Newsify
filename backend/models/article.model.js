@@ -6,7 +6,6 @@ const articleSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
       default: "OP",
     },
     userId: {

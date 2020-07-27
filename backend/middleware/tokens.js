@@ -16,7 +16,7 @@ exports.validateEmailToken = asyncHandler(async (req, res, next) => {
 
   const payload = await validateToken(req.params.emailToken, secret);
 
-  req.id = payload.id;
+  req.userId = payload.userId;
   next();
 });
 
@@ -35,6 +35,6 @@ exports.validateLoginToken = asyncHandler(async (req, res, next) => {
     process.env.LOGIN_TOKEN_SECRET
   );
 
-  req.id = payload.id;
+  req.userId = payload.userId;
   next();
 });
