@@ -5,9 +5,11 @@ const Article = require("../models/article.model");
 const ThreadUsername = require("../models/thread-usernames.model");
 
 exports.getArticle = asyncHandler(async (req, res) => {
-  const article = await Article.find({ _id: req.params.id });
+  const article = await Article.findOne({ _id: req.params.id }).populate(
+    "comments"
+  );
 
-  if (!article.length) {
+  if (!article) {
     throw httpError(400, "Article Not found");
   }
 
