@@ -5,7 +5,7 @@ let rug = require("random-username-generator");
 const ThreadUsername = require("../models/thread-usernames.model");
 
 exports.getUsername = asyncHandler(async (req, res, next) => {
-  const userId = req.body.userId;
+  const userId = req.userId;
   const articleId = req.body.articleId;
 
   let username = await ThreadUsername.findOne({
