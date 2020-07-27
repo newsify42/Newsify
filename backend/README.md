@@ -1,6 +1,6 @@
 # Welcome to the Dark Site
 
-**Note:** Request bodies that use *loginToken* will be handled by the cookies in the future, but you need to pass them manually for now.
+**Note:** Request bodies that use *loginToken* will be handled automatically by cookies in the future, but you need to pass them manually for now.
 
 ## Users
 
@@ -91,8 +91,8 @@ Request body:
 {
   "loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTg0NWM1MjQ5ZTY2N2EwZjQ0OWY5MCIsImlhdCI6MTU5NTY4NDEzNywiZXhwIjoxNTk1Njk0OTM3fQ.kr_h3tspUHxjhSMuuvlp6FDG3aikR8a-tmNH90ndBk8",
   // userName and postId will be generated or queried automatically in the future
-  "userName": "Darragh",
-  "postId": "123",
+  "userId": "5f1845c5249e667a0f449f90",
+  "postId": "5f1c3c51124ec3437b6e78c5",
   "comment": "This is a comment!"
 }
 ```
