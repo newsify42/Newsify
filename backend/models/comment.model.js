@@ -8,13 +8,13 @@ const commentSchema = new Schema(
       required: true,
     },
     userId: {
-      type: mongoose.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },
     articleId: {
       // Use a Number because it's easier to test for now
-      type: mongoose.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Article",
       //type: Number,
       required: true,
