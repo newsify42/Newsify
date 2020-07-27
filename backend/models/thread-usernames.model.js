@@ -8,11 +8,11 @@ const ThreadUsernameSchema = new Schema({
     unique: true,
     ref: "User",
   },
-  postId: {
+  articleId: {
     type: mongoose.Types.ObjectId,
     required: true,
     unique: true,
-    ref: "Post",
+    ref: "Article",
   },
   username: { type: String, required: true, unique: false },
 });

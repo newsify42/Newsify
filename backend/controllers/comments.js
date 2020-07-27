@@ -29,7 +29,7 @@ exports.addComment = asyncHandler(async (req, res) => {
   const newComment = new Comment({
     username: req.username,
     userId: req.body.userId,
-    postId: req.body.postId,
+    articleId: req.body.articleId,
     comment: req.body.comment,
   });
 
