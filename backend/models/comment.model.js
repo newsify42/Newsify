@@ -12,7 +12,7 @@ const commentSchema = new Schema(
       ref: "User",
       required: true,
     },
-    articleId: {
+    postId: {
       // Use a Number because it's easier to test for now
       type: mongoose.ObjectId,
       ref: "Post",
