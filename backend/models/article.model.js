@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-//const reports = require("Comment");
 const Schema = mongoose.Schema;
 
 const articleSchema = new Schema(
@@ -9,7 +8,7 @@ const articleSchema = new Schema(
       default: "OP",
     },
     userId: {
-      type: mongoose.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -20,7 +19,7 @@ const articleSchema = new Schema(
     content: {
       type: String,
       required: true,
-    }, //Content for full version, when clicked into article
+    },
     source: {
       type: Array,
     },
@@ -32,6 +31,12 @@ const articleSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     timestamps: true,
