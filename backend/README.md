@@ -127,7 +127,7 @@ Response body:
 }
 ```
 
-**GET /comments/:id**
+**DELETE /comments/:id**
 
 **Description:** Deletes the comment specified by *:id* in the database.
 
