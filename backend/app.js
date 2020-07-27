@@ -7,7 +7,7 @@ const morgan = require("morgan");
 require("dotenv").config();
 
 const usersRouter = require("./routes/users");
-const postsRouter = require("./routes/posts");
+const articlesRouter = require("./routes/articles");
 const commentsRouter = require("./routes/comments");
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/users", usersRouter);
-app.use("/posts", postsRouter);
+app.use("/articles", articlesRouter);
 app.use("/comments", commentsRouter);
 
 // Handles endpoints that aren't found

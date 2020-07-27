@@ -24,7 +24,7 @@ exports.register = asyncHandler(async (req, res) => {
 
   // Token used to confirm the email
   const confirmEmailToken = await generateToken(
-    { id: newUser._id },
+    { userId: newUser._id },
     process.env.CONFIRM_EMAIL_TOKEN_SECRET
   );
 
@@ -37,7 +37,7 @@ exports.register = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: "New User Created",
-    id: newUser._id,
+    userId: newUser._id,
     emailToken: confirmEmailToken,
   });
 });
@@ -49,7 +49,7 @@ exports.login = asyncHandler(async (req, res) => {
 
   // Token used to login
   const loginToken = await generateToken(
-    { id: req.user._id },
+    { userId: req.user._id },
     process.env.LOGIN_TOKEN_SECRET
   );
 
@@ -58,13 +58,13 @@ exports.login = asyncHandler(async (req, res) => {
   // Also return it with the message (for now)
   res.status(200).json({
     message: "User Logged In",
-    id: req.user._id,
+    userId: req.user._id,
     loginToken: loginToken,
   });
 });
 
 exports.confirmEmail = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate({ _id: req.id }, { emailConfirmed: true });
+  await User.findByIdAndUpdate({ _id: req.userId }, { emailConfirmed: true });
 
   res.status(200).json({
     message: "Email Confirmed",
@@ -73,7 +73,7 @@ exports.confirmEmail = asyncHandler(async (req, res) => {
 
 exports.forgetPassword = asyncHandler(async (req, res) => {
   const resetPasswordToken = await generateToken(
-    { id: req.user._id },
+    { userId: req.user._id },
     process.env.RESET_PASSWORD_TOKEN_SECRET
   );
 
@@ -90,7 +90,10 @@ exports.forgetPassword = asyncHandler(async (req, res) => {
 });
 
 exports.updateEmail = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate({ _id: req.id }, { email: req.body.newEmail });
+  await User.findByIdAndUpdate(
+    { _id: req.userId },
+    { email: req.body.newEmail }
+  );
 
   res.status(200).json({
     message: "Email Updated",
@@ -99,7 +102,7 @@ exports.updateEmail = asyncHandler(async (req, res) => {
 
 exports.updatePassword = asyncHandler(async (req, res) => {
   const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
-  await User.findByIdAndUpdate({ _id: req.id }, { password: hash });
+  await User.findByIdAndUpdate({ _id: req.userId }, { password: hash });
 
   res.status(200).json({
     message: "Password Updated",

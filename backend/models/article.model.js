@@ -1,25 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const commentSchema = new Schema(
+const articleSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
+      default: "OP",
     },
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    articleId: {
-      // Use a Number because it's easier to test for now
-      type: mongoose.Types.ObjectId,
-      ref: "Article",
-      //type: Number,
+    title: {
+      type: String,
       required: true,
     },
-    comment: {
+    content: {
       type: String,
       required: true,
     },
@@ -34,10 +31,17 @@ const commentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
+const Article = mongoose.model("Article", articleSchema);
 
-module.exports = mongoose.model("Comment", commentSchema);
+module.exports = Article;

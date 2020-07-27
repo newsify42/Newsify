@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const httpError = require("http-errors");
 
 const Comment = require("../models/comment.model");
+const Article = require("../models/article.model");
 
 exports.getComment = asyncHandler(async (req, res) => {
   const comment = await Comment.find({ _id: req.params.id });
@@ -28,12 +29,18 @@ exports.getAllComments = asyncHandler(async (req, res) => {
 exports.addComment = asyncHandler(async (req, res) => {
   const newComment = new Comment({
     username: req.username,
-    userId: req.body.userId,
-    postId: req.body.postId,
+    userId: req.userId,
+    articleId: req.body.articleId,
     comment: req.body.comment,
   });
 
   await newComment.save();
+
+  // Need to push the comment's reference to the article
+  await Article.findOneAndUpdate(
+    { _id: req.body.articleId },
+    { $push: { comments: newComment._id } }
+  );
 
   res.status(201).json({
     message: "Comment Created",
