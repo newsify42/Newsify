@@ -28,10 +28,6 @@ router.route("/register").post(checkEmailDoesNotExist, register);
 
 router.route("/login").post(findUserByEmail, checkPasswordsMatch, login);
 
-router.route("/logout").post((req, res) => {
-  res.clearCookie("Authorization");
-});
-
 router
   .route("/confirm_email/:emailToken")
   .get(validateEmailToken, findUserById, confirmEmail);

@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 const httpError = require("http-errors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
@@ -14,7 +13,6 @@ const app = express();
 
 // Middleware stack
 app.use(cors());
-app.use(cookieParser());
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -37,7 +35,7 @@ app.use((err, req, res, next) => {
   console.log();
 
   res.status(status).json({
-    message: err.message,
+    message: err.message
   });
 });
 
@@ -47,10 +45,10 @@ mongoose
     // These options remove deprecation warnings in the MongoDB Node.js driver
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true,
+    useCreateIndex: true
   })
   .then(() => console.log("MongoDB connection successfully established"))
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));
 
 const port = process.env.PORT || 5000;
 
