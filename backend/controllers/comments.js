@@ -19,7 +19,7 @@ exports.getAllComments = asyncHandler(async (req, res) => {
 
   if (!comments.length) {
     return res.status(200).json({
-      message: "No Comments Found",
+      message: "No Comments Found"
     });
   }
 
@@ -28,10 +28,8 @@ exports.getAllComments = asyncHandler(async (req, res) => {
 
 exports.addComment = asyncHandler(async (req, res) => {
   const newComment = new Comment({
-    username: req.username,
-    userId: req.userId,
     articleId: req.body.articleId,
-    comment: req.body.comment,
+    comment: req.body.comment
   });
 
   await newComment.save();
@@ -44,7 +42,7 @@ exports.addComment = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: "Comment Created",
-    id: newComment._id,
+    id: newComment._id
   });
 });
 
@@ -55,7 +53,7 @@ exports.updateComment = asyncHandler(async (req, res) => {
   );
 
   res.status(200).json({
-    message: "Comment Updated",
+    message: "Comment Updated"
   });
 });
 
@@ -63,6 +61,6 @@ exports.deleteComment = asyncHandler(async (req, res) => {
   await Comment.findOneAndRemove({ _id: req.params.id });
 
   res.status(200).json({
-    message: "Comment Deleted",
+    message: "Comment Deleted"
   });
 });
