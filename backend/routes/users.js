@@ -5,11 +5,13 @@ const {
   findUserByEmail,
   findUserById,
   checkPasswordsMatch,
+  isValidEmail,
+  isValidPassword
 } = require("../middleware/users");
 
 const {
   validateEmailToken,
-  validateLoginToken,
+  validateLoginToken
 } = require("../middleware/tokens");
 
 const {
@@ -19,7 +21,7 @@ const {
   forgetPassword,
   updateEmail,
   updatePassword,
-  deleteUser,
+  deleteUser
 } = require("../controllers/users");
 
 router.route("/register").post(checkEmailDoesNotExist, register);
@@ -42,11 +44,23 @@ router
 
 router
   .route("/update_email")
-  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updateEmail);
+  .patch(
+    validateLoginToken,
+    findUserById,
+    checkPasswordsMatch,
+    isValidEmail,
+    updateEmail
+  );
 
 router
   .route("/update_password")
-  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updatePassword);
+  .patch(
+    validateLoginToken,
+    findUserById,
+    checkPasswordsMatch,
+    isValidPassword,
+    updatePassword
+  );
 
 router
   .route("/delete_user")
