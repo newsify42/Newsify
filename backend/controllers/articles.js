@@ -53,7 +53,7 @@ exports.addArticle = asyncHandler(async (req, res) => {
 });
 
 exports.updateArticle = asyncHandler(async (req, res) => {
-  await Article.findByIdAndUpdate(
+  await Article.findOneAndUpdate(
     { _id: req.params.id },
     { content: req.body.newContent }
   );
@@ -64,7 +64,7 @@ exports.updateArticle = asyncHandler(async (req, res) => {
 });
 
 exports.deleteArticle = asyncHandler(async (req, res) => {
-  await Article.findByIdAndRemove({ _id: req.params.id });
+  await Article.findOneAndRemove({ _id: req.params.id });
 
   res.status(200).json({
     message: "Article Deleted",
