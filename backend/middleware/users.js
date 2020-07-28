@@ -52,7 +52,11 @@ exports.isValidEmail = asyncHandler(async (req, res, next) => {
   const { newEmail } = req.body;
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  let email = newEmail.match(emailRegex);
+  let email;
+
+  if (newEmail) {
+    email = newEmail.match(emailRegex);
+  }
 
   if (!email) {
     throw httpError(401, "Not a valid Email");
