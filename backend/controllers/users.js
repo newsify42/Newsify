@@ -64,7 +64,7 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 exports.confirmEmail = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate({ _id: req.userId }, { emailConfirmed: true });
+  await User.findOneAndUpdate({ _id: req.userId }, { emailConfirmed: true });
 
   res.status(200).json({
     message: "Email Confirmed",
@@ -90,7 +90,7 @@ exports.forgetPassword = asyncHandler(async (req, res) => {
 });
 
 exports.updateEmail = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
+  await User.findOneAndUpdate(
     { _id: req.userId },
     { email: req.body.newEmail }
   );
@@ -102,7 +102,7 @@ exports.updateEmail = asyncHandler(async (req, res) => {
 
 exports.updatePassword = asyncHandler(async (req, res) => {
   const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
-  await User.findByIdAndUpdate({ _id: req.userId }, { password: hash });
+  await User.findOneAndUpdate({ _id: req.userId }, { password: hash });
 
   res.status(200).json({
     message: "Password Updated",

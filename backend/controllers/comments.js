@@ -5,7 +5,7 @@ const Comment = require("../models/comment.model");
 const Article = require("../models/article.model");
 
 exports.getComment = asyncHandler(async (req, res) => {
-  const comment = await Comment.find({ _id: req.params.id });
+  const comment = await Comment.findOne({ _id: req.params.id });
 
   if (!comment.length) {
     throw httpError(400, "Comment Not found");
@@ -49,7 +49,7 @@ exports.addComment = asyncHandler(async (req, res) => {
 });
 
 exports.updateComment = asyncHandler(async (req, res) => {
-  await Comment.findByIdAndUpdate(
+  await Comment.findOneAndUpdate(
     { _id: req.params.id },
     { comment: req.body.newComment }
   );
@@ -60,7 +60,7 @@ exports.updateComment = asyncHandler(async (req, res) => {
 });
 
 exports.deleteComment = asyncHandler(async (req, res) => {
-  await Comment.findByIdAndRemove({ _id: req.params.id });
+  await Comment.findOneAndRemove({ _id: req.params.id });
 
   res.status(200).json({
     message: "Comment Deleted",
