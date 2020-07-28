@@ -17,7 +17,7 @@ exports.register = asyncHandler(async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, saltRounds);
   const newUser = new User({
     email: email,
-    password: hash,
+    password: hash
   });
 
   await newUser.save();
@@ -38,7 +38,7 @@ exports.register = asyncHandler(async (req, res) => {
   res.status(201).json({
     message: "New User Created",
     userId: newUser._id,
-    emailToken: confirmEmailToken,
+    emailToken: confirmEmailToken
   });
 });
 
@@ -53,13 +53,11 @@ exports.login = asyncHandler(async (req, res) => {
     process.env.LOGIN_TOKEN_SECRET
   );
 
-  // Store the JWT in a cookie
-  res.cookie("Authorization", "Bearer " + loginToken);
   // Also return it with the message (for now)
   res.status(200).json({
     message: "User Logged In",
     userId: req.user._id,
-    loginToken: loginToken,
+    loginToken: loginToken
   });
 });
 
@@ -67,7 +65,7 @@ exports.confirmEmail = asyncHandler(async (req, res) => {
   await User.findOneAndUpdate({ _id: req.userId }, { emailConfirmed: true });
 
   res.status(200).json({
-    message: "Email Confirmed",
+    message: "Email Confirmed"
   });
 });
 
@@ -85,7 +83,7 @@ exports.forgetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     message: "Password Reset Email Sent",
-    emailToken: resetPasswordToken,
+    emailToken: resetPasswordToken
   });
 });
 
@@ -96,7 +94,7 @@ exports.updateEmail = asyncHandler(async (req, res) => {
   );
 
   res.status(200).json({
-    message: "Email Updated",
+    message: "Email Updated"
   });
 });
 
@@ -105,7 +103,7 @@ exports.updatePassword = asyncHandler(async (req, res) => {
   await User.findOneAndUpdate({ _id: req.userId }, { password: hash });
 
   res.status(200).json({
-    message: "Password Updated",
+    message: "Password Updated"
   });
 });
 
@@ -113,6 +111,6 @@ exports.deleteUser = asyncHandler(async (req, res) => {
   await User.deleteOne({ _id: userId });
 
   res.status(200).json({
-    message: "User Deleted",
+    message: "User Deleted"
   });
 });
