@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const httpError = require("http-errors");
 require("dotenv").config();
 
-const { checkCookieExists } = require("../utils/users");
 const validateToken = require("../utils/validate-token");
 
 exports.validateEmailToken = asyncHandler(async (req, res, next) => {
@@ -21,17 +20,13 @@ exports.validateEmailToken = asyncHandler(async (req, res, next) => {
 });
 
 exports.validateLoginToken = asyncHandler(async (req, res, next) => {
-  // Disabling extracting the token from the cookie temporarily as these
-  // routes don't work locally with browsers for security reasons
-  // checkCookieExists("Authorization", req, res);
-  // const token = req.cookies.Authorization.split(" ")[1];
-
-  if (!req.body.loginToken) {
+  const loginToken = req.headers.authorization;
+  if (!loginToken) {
     throw httpError(400, "Token Not Present");
   }
 
   const payload = await validateToken(
-    req.body.loginToken,
+    loginToken,
     process.env.LOGIN_TOKEN_SECRET
   );
 
