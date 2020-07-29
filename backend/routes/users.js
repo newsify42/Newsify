@@ -29,17 +29,17 @@ router.route("/register").post(checkEmailDoesNotExist, register);
 router.route("/login").post(findUserByEmail, checkPasswordsMatch, login);
 
 router
-  .route("/confirm_email/:emailToken")
+  .route("/confirm-email/:emailToken")
   .get(validateEmailToken, findUserById, confirmEmail);
 
-router.route("/forget_password").post(findUserByEmail, forgetPassword);
+router.route("/forget-password").post(findUserByEmail, forgetPassword);
 
 router
-  .route("/reset_password/:emailToken")
+  .route("/reset-password/:emailToken")
   .post(validateEmailToken, updatePassword);
 
 router
-  .route("/update_email")
+  .route("/update-email")
   .patch(
     validateLoginToken,
     findUserById,
@@ -49,7 +49,7 @@ router
   );
 
 router
-  .route("/update_password")
+  .route("/update-password")
   .patch(
     validateLoginToken,
     findUserById,
@@ -59,7 +59,7 @@ router
   );
 
 router
-  .route("/delete_user")
+  .route("/delete-user")
   .delete(validateLoginToken, findUserById, checkPasswordsMatch, deleteUser);
 
 module.exports = router;
