@@ -30,6 +30,7 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
 
 exports.addArticle = asyncHandler(async (req, res) => {
   const newArticle = new Article({
+    userId: req.userId,
     title: req.body.title,
     content: req.body.content
   });
@@ -38,7 +39,9 @@ exports.addArticle = asyncHandler(async (req, res) => {
 
   // This adds the original poster's username to the threadUsername table
   const newThreadUsername = new ThreadUsername({
-    articleId: newArticle._id
+    userId: req.userId,
+    articleId: newArticle._id,
+    username: newArticle.username
   });
 
   await newThreadUsername.save();
