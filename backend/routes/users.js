@@ -5,11 +5,13 @@ const {
   findUserByEmail,
   findUserById,
   checkPasswordsMatch,
+  isValidEmail,
+  isValidPassword
 } = require("../middleware/users");
 
 const {
   validateEmailToken,
-  validateLoginToken,
+  validateLoginToken
 } = require("../middleware/tokens");
 
 const {
@@ -19,37 +21,45 @@ const {
   forgetPassword,
   updateEmail,
   updatePassword,
-  deleteUser,
+  deleteUser
 } = require("../controllers/users");
 
 router.route("/register").post(checkEmailDoesNotExist, register);
 
 router.route("/login").post(findUserByEmail, checkPasswordsMatch, login);
 
-router.route("/logout").post((req, res) => {
-  res.clearCookie("Authorization");
-});
-
 router
-  .route("/confirm_email/:emailToken")
+  .route("/confirm-email/:emailToken")
   .get(validateEmailToken, findUserById, confirmEmail);
 
-router.route("/forget_password").post(findUserByEmail, forgetPassword);
+router.route("/forget-password").post(findUserByEmail, forgetPassword);
 
 router
-  .route("/reset_password/:emailToken")
+  .route("/reset-password/:emailToken")
   .post(validateEmailToken, updatePassword);
 
 router
-  .route("/update_email")
-  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updateEmail);
+  .route("/update-email")
+  .patch(
+    validateLoginToken,
+    findUserById,
+    checkPasswordsMatch,
+    isValidEmail,
+    updateEmail
+  );
 
 router
-  .route("/update_password")
-  .patch(validateLoginToken, findUserById, checkPasswordsMatch, updatePassword);
+  .route("/update-password")
+  .patch(
+    validateLoginToken,
+    findUserById,
+    checkPasswordsMatch,
+    isValidPassword,
+    updatePassword
+  );
 
 router
-  .route("/delete_user")
+  .route("/delete-user")
   .delete(validateLoginToken, findUserById, checkPasswordsMatch, deleteUser);
 
 module.exports = router;

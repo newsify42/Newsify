@@ -21,7 +21,7 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
 
   if (!articles.length) {
     return res.status(200).json({
-      message: "No Article Found",
+      message: "No Article Found"
     });
   }
 
@@ -32,7 +32,7 @@ exports.addArticle = asyncHandler(async (req, res) => {
   const newArticle = new Article({
     userId: req.userId,
     title: req.body.title,
-    content: req.body.content,
+    content: req.body.content
   });
 
   await newArticle.save();
@@ -41,14 +41,14 @@ exports.addArticle = asyncHandler(async (req, res) => {
   const newThreadUsername = new ThreadUsername({
     userId: req.userId,
     articleId: newArticle._id,
-    username: newArticle.username,
+    username: newArticle.username
   });
 
   await newThreadUsername.save();
 
   res.status(201).json({
     message: "Article Created",
-    id: newArticle._id,
+    id: newArticle._id
   });
 });
 
@@ -59,7 +59,7 @@ exports.updateArticle = asyncHandler(async (req, res) => {
   );
 
   res.status(200).json({
-    message: "Article Updated",
+    message: "Article Updated"
   });
 });
 
@@ -67,6 +67,6 @@ exports.deleteArticle = asyncHandler(async (req, res) => {
   await Article.findOneAndRemove({ _id: req.params.id });
 
   res.status(200).json({
-    message: "Article Deleted",
+    message: "Article Deleted"
   });
 });

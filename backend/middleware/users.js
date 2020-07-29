@@ -47,3 +47,28 @@ exports.checkPasswordsMatch = asyncHandler(async (req, res, next) => {
 
   next();
 });
+
+exports.isValidEmail = asyncHandler(async (req, res, next) => {
+  const { newEmail } = req.body;
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  let email;
+
+  if (newEmail) {
+    email = newEmail.match(emailRegex);
+  }
+
+  if (!email) {
+    throw httpError(401, "Not a valid Email");
+  }
+  next();
+});
+
+exports.isValidPassword = asyncHandler(async (req, res, next) => {
+  const { newPassword } = req.body;
+
+  if (newPassword.length < 5) {
+    throw httpError(401, "Password must be at least 5 characters long");
+  }
+  next();
+});
