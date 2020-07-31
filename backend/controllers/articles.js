@@ -45,7 +45,7 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
 //Sort by relevance
 function sortByRelevance(req, res, posts) {
   posts.sort(function (a, b) {
-    return b.likes - a.likes;
+    return b.upvotes - a.upvotes;
   });
   return posts;
 }
