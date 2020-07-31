@@ -23,11 +23,21 @@ const articleSchema = new Schema(
     source: {
       type: Array,
     },
-    likes: {
+    category: {
+      type: String,
+      required: true,
+    },
+    reports: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Report",
+      },
+    ],
+    upvotes: {
       type: Number,
       default: 0,
     },
-    dislikes: {
+    downvotes: {
       type: Number,
       default: 0,
     },

@@ -3,6 +3,9 @@ const httpError = require("http-errors");
 
 const Article = require("../models/article.model");
 const ThreadUsername = require("../models/thread-usernames.model");
+const Report = require("../models/report.model");
+const LikedArticle = require("../models/liked-articles.model");
+const { findOne } = require("../models/article.model");
 
 exports.getArticle = asyncHandler(async (req, res) => {
   const article = await Article.findOne({ _id: req.params.id }).populate(
@@ -25,14 +28,46 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
     });
   }
 
+  if (req.body.sort == "time") {
+    articles = sortByTime(req, res, articles);
+  } else if (req.body.sort == "relevance") {
+    articles = sortByRelevance(req, res, articles);
+  } //  else if (req.body.sort == "proximity") {
+  //   articles = sortByProximity(req, res, articles);
+  // }
+  if (req.body.reverse == 1) {
+    articles.reverse();
+  }
   res.status(200).json(articles);
 });
+
+//These functions will change when the schemas and datatypes are decided
+//Sort by relevance
+function sortByRelevance(req, res, posts) {
+  posts.sort(function (a, b) {
+    return b.likes - a.likes;
+  });
+  return posts;
+}
+
+//Sort by post creation
+function sortByTime(req, res, articles) {
+  articles.sort(function (a, b) {
+    var x = a.createdAt;
+    var y = b.createdAt;
+    return y - x;
+  });
+  return articles;
+}
+
+//Sort by proximity
 
 exports.addArticle = asyncHandler(async (req, res) => {
   const newArticle = new Article({
     userId: req.userId,
     title: req.body.title,
     content: req.body.content,
+    category: req.body.category,
   });
 
   await newArticle.save();
@@ -69,4 +104,133 @@ exports.deleteArticle = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Article Deleted",
   });
+});
+
+exports.reportArticle = asyncHandler(async (req, res) => {
+  const userId = req.body.userId;
+  const articleId = req.body.articleId;
+  const offense = req.body.offense;
+  const content = req.body.content;
+
+  if (!Article.findById({ _id: articleId }).length) {
+    res.status(200).json({
+      message: "Could not find Article",
+    });
+  } else {
+    const newReport = new Report({
+      userId: userId,
+      reportedId: articleId,
+      offense: offense,
+      content: content,
+    });
+    await newReport.save();
+
+    if (
+      await Article.findOneAndUpdate(
+        { _id: req.body.articleId },
+        { $push: { reports: newReport._id } }
+      )
+    ) {
+      res.status(200).json({
+        message: "Report added",
+      });
+    } else {
+      res.status(200).json({
+        message: "Could not send report",
+      });
+    }
+  }
+});
+
+exports.voteArticle = asyncHandler(async (req, res) => {
+  const likedArticle = await LikedArticle.findOne({
+    userId: req.userId,
+    articleId: req.body.articleId,
+  });
+
+  //If user has already voted, it either deletes previous vote or swaps it
+  if (likedArticle) {
+    if (
+      (likedArticle.liked == 1 && req.body.vote == 1) ||
+      (likedArticle.liked == 0 && req.body.vote == -1)
+    ) {
+      //deletes user/article/like object associated between post and user
+      await LikedArticle.findByIdAndDelete({ _id: likedArticle._id });
+
+      //Takes away the vote from the article
+      if (req.body.vote == 1) {
+        await Article.findOneAndUpdate(
+          { _id: req.body.articleId },
+          { $inc: { upvotes: -1 } }
+        );
+        res.status(200).json({
+          message: "upvote successfully revoked",
+        });
+      } else if (req.body.vote == -1) {
+        await Article.findOneAndUpdate(
+          { _id: req.body.articleId },
+          { $inc: { downvotes: -1 } }
+        );
+        res.status(200).json({
+          message: "downvote successfully revoked",
+        });
+      }
+    }
+    //Swaps the "liked" boolean to the opposite value
+    else if (
+      (likedArticle.liked == 1 && req.body.vote == -1) ||
+      (likedArticle.liked == 0 && req.body.vote == 1)
+    ) {
+      var swap = new Boolean(likedArticle.liked != true);
+
+      await LikedArticle.findOneAndUpdate(
+        {
+          userId: req.userId,
+          articleId: req.body.articleId,
+        },
+        { liked: swap }
+      );
+      res.status(200).json({
+        message: "Vote successfully swapped",
+      });
+    }
+  }
+
+  //If user had no previous voting history
+  else {
+    if (req.body.vote == -1) {
+      await Article.findOneAndUpdate(
+        { _id: req.body.articleId },
+        { $inc: { downvotes: 1 } }
+      );
+
+      const newLikedArticle = new LikedArticle({
+        userId: req.userId,
+        articleId: req.body.articleId,
+        liked: 0,
+      });
+      await newLikedArticle.save();
+      res.status(200).json({
+        message: "downvote successful",
+      });
+    } else {
+      if (req.body.vote == 1) {
+        await Article.findOneAndUpdate(
+          { _id: req.body.articleId },
+          { $inc: { upvotes: 1 } }
+        );
+
+        const newLikedArticle = new LikedArticle({
+          userId: req.userId,
+          articleId: req.body.articleId,
+          liked: 1,
+        });
+        await newLikedArticle.save();
+
+        res.status(200).json({
+          message: "upvote successful",
+        });
+      }
+    }
+  }
 });

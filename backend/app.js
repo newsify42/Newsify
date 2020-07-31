@@ -3,7 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const httpError = require("http-errors");
 const mongoose = require("mongoose");
-mongoose.set('useFindAndModify', false);
+mongoose.set("useFindAndModify", false);
 const morgan = require("morgan");
 require("dotenv").config();
 
