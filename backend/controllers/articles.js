@@ -28,39 +28,8 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
     });
   }
 
-  if (req.body.sort == "time") {
-    articles = sortByTime(req, res, articles);
-  } else if (req.body.sort == "relevance") {
-    articles = sortByRelevance(req, res, articles);
-  } //  else if (req.body.sort == "proximity") {
-  //   articles = sortByProximity(req, res, articles);
-  // }
-  if (req.body.reverse == 1) {
-    articles.reverse();
-  }
   res.status(200).json(articles);
 });
-
-//These functions will change when the schemas and datatypes are decided
-//Sort by relevance
-function sortByRelevance(req, res, posts) {
-  posts.sort(function (a, b) {
-    return b.upvotes - a.upvotes;
-  });
-  return posts;
-}
-
-//Sort by post creation
-function sortByTime(req, res, articles) {
-  articles.sort(function (a, b) {
-    var x = a.createdAt;
-    var y = b.createdAt;
-    return y - x;
-  });
-  return articles;
-}
-
-//Sort by proximity
 
 exports.addArticle = asyncHandler(async (req, res) => {
   const newArticle = new Article({
