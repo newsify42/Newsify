@@ -31,6 +31,26 @@ exports.getAllArticles = asyncHandler(async (req, res) => {
   res.status(200).json(articles);
 });
 
+exports.getLikedArticles = asyncHandler(async (req, res) => {
+  const likedArticles = await LikedArticle.find({
+    userId: req.userId,
+    liked: 1,
+  });
+
+  const articles = [];
+  while (likedArticles.length) {
+    articles.push(await Article.findById(likedArticles.pop().articleId));
+  }
+
+  if (!articles.length) {
+    return res.status(200).json({
+      message: "No Article Found",
+    });
+  }
+
+  res.status(200).json(articles);
+});
+
 exports.addArticle = asyncHandler(async (req, res) => {
   const newArticle = new Article({
     userId: req.userId,
